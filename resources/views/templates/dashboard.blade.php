@@ -197,6 +197,7 @@
                         <ul class="sidebar-submenu">
                           <li><a href="{{ url('/data-poi') }}">Data POI</a></li>
                           <li><a href="{{ url('/permintaan-poi') }}">Permintaan POI</a></li>
+                          <li><a href="{{ url('/data-kategori-poi') }}">Kategori POI</a></li>
                         </ul>
                       </li>
 

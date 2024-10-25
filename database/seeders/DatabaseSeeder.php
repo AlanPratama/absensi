@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Counter;
 use App\Models\Golongan;
 use App\Models\Jabatan;
+use App\Models\KategoriPOI;
 use App\Models\Lokasi;
 use App\Models\Payroll;
 use App\Models\ResetCuti;
@@ -230,6 +231,10 @@ class DatabaseSeeder extends Seeder
             'name' => 'Gaji',
             'text' => 'GJ',
             'counter' => 0
+        ]);
+
+        KategoriPOI::create([
+            "kategori" => "Meeting",
         ]);
 
     }

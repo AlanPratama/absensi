@@ -22,6 +22,7 @@ use App\Http\Controllers\karyawanController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\AutoShiftController;
 use App\Http\Controllers\dashboardController;
+use App\Http\Controllers\KategoriPOIController;
 use App\Http\Controllers\RekapDataController;
 use App\Http\Controllers\TunjanganController;
 use App\Http\Controllers\StatusPtkpController;
@@ -274,6 +275,14 @@ Route::post('/data-pelanggan/proses-tambah', [PelangganController::class, 'store
 Route::get('/data-pelanggan/edit/{id}', [PelangganController::class, 'edit'])->middleware('admin');
 Route::put('/data-pelanggan/update/{id}', [PelangganController::class, 'update'])->middleware('admin');
 Route::delete('/data-pelanggan/delete/{id}', [PelangganController::class, 'destroy'])->middleware('admin');
+
+//  == KATEGORI POI == KATEGORI POI
+Route::get('/data-kategori-poi', [KategoriPOIController::class, 'index'])->middleware('admin');
+Route::get('/data-kategori-poi/tambah', [KategoriPOIController::class, 'create'])->middleware('admin');
+Route::post('/data-kategori-poi/proses-tambah', [KategoriPOIController::class, 'store'])->middleware('admin');
+Route::get('/data-kategori-poi/edit/{id}', [KategoriPOIController::class, 'edit'])->middleware('admin');
+Route::put('/data-kategori-poi/update/{id}', [KategoriPOIController::class, 'update'])->middleware('admin');
+Route::delete('/data-kategori-poi/delete/{id}', [KategoriPOIController::class, 'destroy'])->middleware('admin');
 
 // == POI (Point Of Interest) == POI (Point Of Interest)
 Route::get('/data-poi', [PoiController::class, 'index'])->middleware('admin');
