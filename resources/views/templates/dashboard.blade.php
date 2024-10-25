@@ -193,6 +193,17 @@
                         </ul>
                       </li>
 
+                      <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="javascript:void(0)"><i data-feather="briefcase"></i><span>POI</span></a>
+                        <ul class="sidebar-submenu">
+                          <li><a href="{{ url('/data-poi') }}">Data POI</a></li>
+                          <li><a href="{{ url('/permintaan-poi') }}">Permintaan POI</a></li>
+                        </ul>
+                      </li>
+
+                      <li class="sidebar-list">
+                        <a class="sidebar-link sidebar-title link-nav" href="{{ url('/data-pelanggan') }}"><i data-feather="users"> </i><span>Pelanggan</span></a>
+                      </li>
+
                       <li class="sidebar-list">
                         <a class="sidebar-link sidebar-title link-nav" href="{{ url('/data-cuti') }}"><i data-feather="shuffle"> </i><span>Cuti</span></a>
                       </li>

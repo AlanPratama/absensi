@@ -26,6 +26,8 @@ use App\Http\Controllers\RekapDataController;
 use App\Http\Controllers\TunjanganController;
 use App\Http\Controllers\StatusPtkpController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PelangganController;
+use App\Http\Controllers\PoiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,10 +40,18 @@ use App\Http\Controllers\NotificationController;
 |
 */
 
-Route::get('/', [authController::class, 'index'])->name('login')->middleware('guest');
-Route::get('/login-admin', [authController::class, 'loginAdmin'])->name('loginAdmin')->middleware('guest');
-Route::get('/get-started', [authController::class, 'getStarted'])->name('getStarted')->middleware('guest');
-Route::get('/welcome', [authController::class, 'welcome'])->name('welcome')->middleware('guest');
+Route::get('/', [authController::class, 'index'])
+    ->name('login')
+    ->middleware('guest');
+Route::get('/login-admin', [authController::class, 'loginAdmin'])
+    ->name('loginAdmin')
+    ->middleware('guest');
+Route::get('/get-started', [authController::class, 'getStarted'])
+    ->name('getStarted')
+    ->middleware('guest');
+Route::get('/welcome', [authController::class, 'welcome'])
+    ->name('welcome')
+    ->middleware('guest');
 Route::get('/presensi', [authController::class, 'presensi']);
 Route::get('/presensi-pulang', [authController::class, 'presensiPulang']);
 Route::post('/presensi/store', [authController::class, 'presensiStore']);
@@ -256,6 +266,18 @@ Route::post('/pajak-pph21/tambah-proses', [PajakController::class, 'tambahProses
 Route::get('/pajak-pph21/{id}/edit', [PajakController::class, 'edit'])->middleware('admin');
 Route::put('/pajak-pph21/{id}/update', [PajakController::class, 'update'])->middleware('admin');
 Route::delete('/pajak-pph21/{id}/delete', [PajakController::class, 'delete'])->middleware('admin');
+
+// == PELANGGAN == PELANGGAN
+Route::get('/data-pelanggan', [PelangganController::class, 'index'])->middleware('admin');
+Route::get('/data-pelanggan/tambah', [PelangganController::class, 'create'])->middleware('admin');
+Route::post('/data-pelanggan/proses-tambah', [PelangganController::class, 'store'])->middleware('admin');
+Route::get('/data-pelanggan/edit/{id}', [PelangganController::class, 'edit'])->middleware('admin');
+Route::put('/data-pelanggan/update/{id}', [PelangganController::class, 'update'])->middleware('admin');
+Route::delete('/data-pelanggan/delete/{id}', [PelangganController::class, 'destroy'])->middleware('admin');
+
+// == POI (Point Of Interest) == POI (Point Of Interest)
+Route::get('/data-poi', [PoiController::class, 'index'])->middleware('admin');
+Route::get('/data-poi/tambah', [PoiController::class, 'tambahPOI'])->middleware('admin');
 
 Route::get('/data-absen/export', [AbsenController::class, 'exportDataAbsen'])->middleware('admin');
 

@@ -8,7 +8,7 @@
                         <h4>{{ $title }}</h4>
                     </div>
                     <div class="col-md-6 p-0">
-                        <a class="btn btn-primary btn-sm" href="{{ url('/data-cuti/tambah') }}">+ Tambah</a>
+                        <a class="btn btn-primary btn-sm" href="{{ url('/data-poi/tambah') }}">+ Tambah</a>
                     </div>
                 </div>
             </div>

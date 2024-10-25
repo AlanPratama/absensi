@@ -232,6 +232,5 @@ class DatabaseSeeder extends Seeder
             'counter' => 0
         ]);
 
-
     }
 }
