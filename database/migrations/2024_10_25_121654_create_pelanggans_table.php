@@ -22,7 +22,7 @@ class CreatePelanggansTable extends Migration
 
             $table->string('no_telepon_pic')->nullable();
 
-            $table->enum('tipe', ['Perorangan', 'Perusahaan', 'Toko', 'Dll'])->default('Dll');
+            $table->enum('tipe', ['Perorangan', 'Perusahaan', 'Toko', 'Lainnya'])->default('Lainnya');
 
             $table->timestamps();
         });
