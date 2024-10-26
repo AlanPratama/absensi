@@ -28,6 +28,7 @@ use App\Http\Controllers\TunjanganController;
 use App\Http\Controllers\StatusPtkpController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PelangganController;
+use App\Http\Controllers\PermintaanPOIController;
 use App\Http\Controllers\PoiController;
 
 /*
@@ -286,7 +287,27 @@ Route::delete('/data-kategori-poi/delete/{id}', [KategoriPOIController::class, '
 
 // == POI (Point Of Interest) == POI (Point Of Interest)
 Route::get('/data-poi', [PoiController::class, 'index'])->middleware('admin');
-Route::get('/data-poi/tambah', [PoiController::class, 'tambahPOI'])->middleware('admin');
+Route::get('/data-poi/tambah', [PoiController::class, 'create'])->middleware('admin');
+Route::get('/data-poi/detail/{id}', [PoiController::class, 'show'])->middleware('admin');
+Route::post('/data-poi/proses-tambah', [PoiController::class, 'store'])->middleware('admin');
+Route::get('/data-poi/edit/{id}', [PoiController::class, 'edit'])->middleware('admin');
+Route::put('/data-poi/update/{id}', [PoiController::class, 'update'])->middleware('admin');
+Route::delete('/data-poi/delete/{id}', [PoiController::class, 'destroy'])->middleware('admin');
+
+// == PERMINTAAN POI == PERMINTAAN POI
+Route::get('/data-poi/permintaan/{id}', [PermintaanPOIController::class, 'index'])->middleware('admin');
+Route::patch('/data-poi/permintaan/{id}', [PermintaanPOIController::class, 'processPermintaanPOI'])->middleware('admin');
+
+
+// == USER POI == USER POI
+Route::get("/inbox-poi", [PoiController::class, 'indexInboxPoi'])->middleware('auth');
+Route::get("/inbox-poi/detail/{id}", [PoiController::class, 'showInboxPoi'])->middleware('auth');
+Route::patch("/inbox-poi/change-status/{id}", [PoiController::class, 'changeStatusInboxPoi'])->middleware('auth');
+
+Route::get("/request-poi", [PermintaanPOIController::class, 'indexRequestPoi'])->middleware('auth');
+Route::get("/request-poi/my", [PermintaanPOIController::class, 'myRequestPoi'])->middleware('auth');
+Route::get("/request-poi/detail/{id}", [PermintaanPOIController::class, 'showRequestPoi'])->middleware('auth');
+Route::patch("/request-poi/process/{id}", [PermintaanPOIController::class, 'requestPoiProcess'])->middleware('auth');
 
 Route::get('/data-absen/export', [AbsenController::class, 'exportDataAbsen'])->middleware('admin');
 

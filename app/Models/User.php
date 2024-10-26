@@ -24,12 +24,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(MappingShift::class);
     }
-    
+
     public function dinasLuar()
     {
         return $this->hasMany(dinasLuar::class);
     }
-    
+
     public function Sip()
     {
         return $this->hasMany(Sip::class);
@@ -64,6 +64,16 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Lokasi::class);
     }
+
+
+    public function POI() {
+        return $this->hasMany(POI::class, 'pegawai_id', 'id');
+    }
+
+    public function PermintaanPOI() {
+        return $this->hasMany(PermintaanPOI::class, 'pegawai_id', 'id');
+    }
+
 
     public function whatsapp($phoneNumber) {
         if (substr($phoneNumber, 0, 1) == '0') {

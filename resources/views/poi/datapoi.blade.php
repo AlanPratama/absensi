@@ -16,16 +16,19 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <form action="{{ url('/data-cuti') }}">
-                            <div class="row">
+                    <form action="{{ url('/data-poi') }}">
+                        <div class="row">
                             <div class="col-3">
-                                <input type="datetime" class="form-control" name="mulai" placeholder="Tanggal Mulai" id="mulai" value="{{ request('mulai') }}">
+                                <input type="datetime" class="form-control" name="mulai" placeholder="Tanggal Mulai"
+                                    id="mulai" value="{{ request('mulai') }}">
                             </div>
                             <div class="col-3">
-                                <input type="datetime" class="form-control" name="akhir" placeholder="Tanggal Akhir" id="akhir" value="{{ request('akhir') }}">
+                                <input type="datetime" class="form-control" name="akhir" placeholder="Tanggal Akhir"
+                                    id="akhir" value="{{ request('akhir') }}">
                             </div>
                             <div class="col-3">
-                                <button type="submit" id="search"class="border-0 mt-3" style="background-color: transparent;"><i class="fas fa-search"></i></button>
+                                <button type="submit" id="search"class="border-0 mt-3"
+                                    style="background-color: transparent;"><i class="fas fa-search"></i></button>
                             </div>
                         </div>
                     </form>
@@ -36,71 +39,93 @@
                             <thead>
                                 <tr>
                                     <th>No.</th>
-                                    <th>Nama Pegawai</th>
-                                    <th>Nama Cuti</th>
+                                    <th>Pelanggan</th>
+                                    <th>Pegawai</th>
                                     <th>Tanggal</th>
-                                    <th>Alasan Cuti</th>
-                                    <th>Foto Cuti</th>
-                                    <th>Status Cuti</th>
-                                    <th>Catatan</th>
+                                    <th>Tanggal Mulai</th>
+                                    <th>Target</th>
+                                    <th>Foto</th>
+                                    {{-- <th>Kategori</th> --}}
+                                    {{-- <th>Tipe</th> --}}
+                                    <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($data_cuti as $dc)
-                                <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $dc->User->name }}</td>
-                                    <td>{{ $dc->nama_cuti }}</td>
-                                    <td>{{ $dc->tanggal}}</td>
-                                    <td>{{ $dc->alasan_cuti}}</td>
-                                    <td>
-                                        <img src="{{ url('storage/'.$dc->foto_cuti) }}" style="width: 70px" alt="">
-                                    </td>
-                                    <td>
-                                        @if($dc->status_cuti == "Diterima")
-                                            <span class="badge badge-success">{{ $dc->status_cuti }}</span>
-                                        @elseif($dc->status_cuti == "Ditolak")
-                                            <span class="badge badge-danger">{{ $dc->status_cuti }}</span>
-                                        @else
-                                            <span class="badge badge-warning">{{ $dc->status_cuti }}</span>
-                                        @endif
-                                    </td>
-                                    <td>{{ $dc->catatan}}</td>
-                                    <td>
-                                        <ul class="action">
-                                            @if($dc->status_cuti == "Diterima")
-                                                <li class="me-2">
-                                                    <span class="badge badge-success">Sudah Approve</span>
-                                                </li>
+                                @foreach ($data_poi as $poi)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $poi->Pelanggan ? $poi->Pelanggan->nama : '-' }}</td>
+                                        <td>{{ $poi->Pegawai ? $poi->Pegawai->name : '-' }}</td>
+                                        <td>{{ $poi->tanggal }}</td>
+                                        <td>{{ $poi->tanggal_mulai ? $poi->tanggal_mulai : '-' }}</td>
+                                        <td>
+                                            {{ $poi->target }}
+                                            <br>
+                                            <span class="badge badge-info">{{ $poi->tipe }}</span>
+                                            <span
+                                                class="badge badge-info">{{ $poi->KategoriPOI ? $poi->KategoriPOI->kategori : '' }}</span>
+                                        </td>
+                                        </td>
+                                        <td>
+                                            @if ($poi->foto)
+                                                <img src="{{ url('storage/' . $poi->foto) }}" style="width: 70px"
+                                                    alt="{{ $poi->target }}">
                                             @else
-                                                <li>
-                                                    <a href="{{ url('/data-cuti/edit/'.$dc->id) }}"><i style="color: blue" class="fas fa-edit"></i></a>
-                                                </li>
+                                                -
                                             @endif
-
-                                            @if($dc->status_cuti == "Diterima")
-                                                <li>
-                                                    <span class="badge badge-success">Sudah Approve</span>
-                                                </li>
+                                        </td>
+                                        {{-- <td>{{ $poi->KategoriPOI->kategori }}</td> --}}
+                                        {{-- <td>{{ $poi->tipe}}</td> --}}
+                                        <td>
+                                            @if ($poi->status == 'Pending')
+                                                <span class="badge badge-info">{{ $poi->status }}</span>
+                                            @elseif($poi->status == 'In Progress')
+                                                <span class="badge badge-warning">{{ $poi->status }}</span>
+                                            @elseif($poi->status == 'Done')
+                                                <span class="badge badge-success">{{ $poi->status }}</span>
                                             @else
+                                                <span class="badge badge-danger">{{ $poi->status }}</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <ul class="action">
+                                                @if ($poi->pegawai_id == null)
+                                                    <li class="mr-2" style="margin-right: 6px">
+                                                        <a href="{{ url('/data-poi/permintaan/' . $poi->id) }}"><i
+                                                                style="color: orange" class="fas fa-briefcase"></i></a>
+                                                    </li>
+                                                @endif
+
+                                                <li style="margin-right: 6px">
+                                                    <a href="{{ url('/data-poi/detail/' . $poi->id) }}"><i
+                                                            style="color: blue" class="fas fa-eye"></i></a>
+                                                </li>
+
+                                                <li>
+                                                    <a href="{{ url('/data-poi/edit/' . $poi->id) }}"><i
+                                                            style="color: green" class="fas fa-edit"></i></a>
+                                                </li>
+
                                                 <li class="delete">
-                                                    <form action="{{ url('/data-cuti/delete/'.$dc->id) }}" method="post" class="d-inline">
+                                                    <form action="{{ url('/data-poi/delete/' . $poi->id) }}" method="post"
+                                                        class="d-inline">
                                                         @method('delete')
                                                         @csrf
-                                                        <button class="border-0" style="background-color: transparent" onClick="return confirm('Are You Sure')"><i class="fas fa-trash"></i></button>
+                                                        <button class="border-0" style="background-color: transparent"
+                                                            onClick="return confirm('Are You Sure')"><i
+                                                                class="fas fa-trash"></i></button>
                                                     </form>
                                                 </li>
-                                            @endif
-                                        </ul>
-                                    </td>
-                                </tr>
+                                            </ul>
+                                        </td>
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
                     <div class="d-flex justify-content-end mr-4">
-                        {{ $data_cuti->links() }}
+                        {{ $data_poi->links() }}
                     </div>
                 </div>
             </div>
@@ -109,9 +134,9 @@
     @push('script')
         <script>
             $(document).ready(function() {
-                $('#mulai').change(function(){
+                $('#mulai').change(function() {
                     var mulai = $(this).val();
-                $('#akhir').val(mulai);
+                    $('#akhir').val(mulai);
                 });
             });
         </script>

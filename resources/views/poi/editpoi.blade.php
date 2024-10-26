@@ -15,16 +15,17 @@
         </div>
         <div class="col-lg-12">
             <div class="card">
-                <form method="post" action="{{ url('/data-poi/proses-tambah') }}" enctype="multipart/form-data"
+                <form method="post" action="{{ url('/data-poi/update/' . $poi->id) }}" enctype="multipart/form-data"
                     class="p-4">
                     @csrf
+                    @method("put")
                     <div class="form-row">
                         <div class="col mb-4">
                             <label for="pegawai_id">Nama Pegawai</label>
                             <select id="pegawai_id" name="pegawai_id" class="form-control selectpicker" id="">
                                 <option value="">Pilih Pegawai</option>
                                 @foreach ($data_pegawai as $pegawai)
-                                    @if (old('pegawai_id') == $pegawai->id)
+                                    @if ($poi->pegawai_id == $pegawai->id)
                                         <option value="{{ $pegawai->id }}" selected>{{ $pegawai->name }}</option>
                                     @else
                                         <option value="{{ $pegawai->id }}">{{ $pegawai->name }}</option>
@@ -43,7 +44,7 @@
                             <select id="pelanggan_id" name="pelanggan_id" class="form-control selectpicker" id="">
                                 <option value="">Pilih Pelanggan</option>
                                 @foreach ($data_pelanggan as $pelanggan)
-                                    @if (old('pelanggan_id') == $pelanggan->id)
+                                    @if ($poi->pelanggan_id == $pelanggan->id)
                                         <option value="{{ $pelanggan->id }}" selected>{{ $pelanggan->nama }}</option>
                                     @else
                                         <option value="{{ $pelanggan->id }}">{{ $pelanggan->nama }}</option>
@@ -63,7 +64,7 @@
                                 id="">
                                 <option value="">Pilih Kategori POI</option>
                                 @foreach ($data_kategori_poi as $kategori_poi)
-                                    @if (old('kategori_poi_id') == $kategori_poi->id)
+                                    @if ($poi->kategori_poi_id == $kategori_poi->id)
                                         <option value="{{ $kategori_poi->id }}" selected>{{ $kategori_poi->kategori }}
                                         </option>
                                     @else
@@ -81,7 +82,7 @@
                         <div class="col mb-4">
                             <label for="target">Target POI</label>
                             <input type="text" class="form-control @error('target') is-invalid @enderror" id="target"
-                                name="target" value="{{ old('target') }}">
+                                name="target" value="{{ $poi->target }}">
                             @error('target')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -93,8 +94,8 @@
                             <label for="tipe">Tipe POI</label>
                             <select id="tipe" name="tipe" class="form-control selectpicker" id="tipe">
                                 <option value="">Pilih Tipe POI</option>
-                                <option @if (old('tipe') == 'Kuantitas') selected @endif value="Kuantitas">Kuantitas</option>
-                                <option @if (old('tipe') == 'Deskriptif') selected @endif value="Deskriptif">Deskriptif</option>
+                                <option @if ($poi->tipe == 'Kuantitas') selected @endif value="Kuantitas">Kuantitas</option>
+                                <option @if ($poi->tipe == 'Deskriptif') selected @endif value="Deskriptif">Deskriptif</option>
                             </select>
                             @error('tipe')
                                 <div class="invalid-feedback">
@@ -103,10 +104,10 @@
                             @enderror
                         </div>
 
-                        <div class="col mb-4 d-none" id="jumlah_nominal_div">
+                        <div class="col mb-4 @if ($poi->tipe == "Deskriptif") d-none @endif" id="jumlah_nominal_div">
                             <label for="jumlah_nominal">Jumlah Nominal</label>
                             <input type="text" class="form-control money @error('jumlah_nominal') is-invalid @enderror"
-                                id="jumlah_nominal" name="jumlah_nominal" value="{{ old('jumlah_nominal') }}">
+                                id="jumlah_nominal" name="jumlah_nominal" value="{{ $poi->jumlah_nominal }}">
                             @error('jumlah_nominal')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -117,7 +118,7 @@
                         <div class="col mb-4">
                             <label for="lat_poi">Lat POI (opsional)</label>
                             <input type="numeric" class="form-control numeric @error('lat_poi') is-invalid @enderror" id="lat_poi"
-                                name="lat_poi" value="{{ old('lat_poi') }}">
+                                name="lat_poi" value="{{ $poi->lat_poi }}">
                             @error('lat_poi')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -128,16 +129,17 @@
                         <div class="col mb-4">
                             <label for="long_poi">Long POI (opsional)</label>
                             <input type="numeric" class="form-control numeric @error('long_poi') is-invalid @enderror"
-                                id="long_poi" name="long_poi" value="{{ old('long_poi') }}">
+                                id="long_poi" name="long_poi" value="{{ $poi->long_poi }}">
                             @error('long_poi')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
                             @enderror
                         </div>
+
                         <div class="col mb-4">
                             <label for="tanggal_mulai">Tanggal Mulai (opsional)</label>
-                            <input type="datetime" class="form-control @error('tanggal_mulai') is-invalid @enderror" name="tanggal_mulai" id="tanggal_mulai" value="{{ old('tanggal_mulai') }}">
+                            <input type="datetime" class="form-control @error('tanggal_mulai') is-invalid @enderror" name="tanggal_mulai" id="tanggal_mulai" value="{{ $poi->tanggal_mulai }}">
                             @error('tanggal_mulai')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -157,18 +159,21 @@
                             @enderror
                         </div>
 
-                        {{-- <div class="col mb-4 d-none" id="jumlah_nominal_akhir_div">
-                            <label for="jumlah_nominal_akhir">Jumlah Nominal Akhir</label>
-                            <input type="text"
-                                class="form-control money @error('jumlah_nominal_akhir') is-invalid @enderror"
-                                id="jumlah_nominal_akhir" name="jumlah_nominal_akhir"
-                                value="{{ old('jumlah_nominal_akhir') }}">
-                            @error('jumlah_nominal_akhir')
+                        <div class="col mb-4">
+                            <label for="status">Status POI</label>
+                            <select id="status" name="status" class="form-control selectpicker" id="status">
+                                <option value="">Pilih Status POI</option>
+                                <option @if ($poi->status == 'Pending') selected @endif value="Pending">Pending</option>
+                                <option @if ($poi->status == 'In Progress') selected @endif value="In Progress">In Progress</option>
+                                <option @if ($poi->status == 'Done') selected @endif value="Done">Done</option>
+                                <option @if ($poi->status == 'Cancel') selected @endif value="Cancel">Cancel</option>
+                            </select>
+                            @error('status')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
                             @enderror
-                        </div> --}}
+                        </div>
 
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>

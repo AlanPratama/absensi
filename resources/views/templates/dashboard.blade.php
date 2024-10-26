@@ -196,7 +196,7 @@
                       <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="javascript:void(0)"><i data-feather="briefcase"></i><span>POI</span></a>
                         <ul class="sidebar-submenu">
                           <li><a href="{{ url('/data-poi') }}">Data POI</a></li>
-                          <li><a href="{{ url('/permintaan-poi') }}">Permintaan POI</a></li>
+                          {{-- <li><a href="{{ url('/permintaan-poi') }}">Permintaan POI</a></li> --}}
                           <li><a href="{{ url('/data-kategori-poi') }}">Kategori POI</a></li>
                         </ul>
                       </li>
