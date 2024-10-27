@@ -82,7 +82,7 @@
                             </div>
                             @php
                                 $tgl = new DateTime($poi->tanggal);
-                                $tgl_mulai = new DateTime($poi->tanggal_mulai);
+                                $tgl_mulai = $poi->tanggal_mulai ? new DateTime($poi->tanggal_mulai) : null;
                             @endphp
                             <ul class="mt-2">
                                 <li class="mt-4"><span class="fa-solid fa-bullseye me-3"
@@ -124,18 +124,6 @@
                                         Kategori</span>
                                 </li>
                                 <hr style="color: rgb(204, 204, 204)">
-                                @if ($poi->status != 'Pending')
-                                    <li class="mt-4"><span class="fa-solid fa-circle-exclamation me-3"
-                                            style="font-size: 20px; color:black"></span>
-                                        <span
-                                            style="color:black; font-size:14px">{{ $poi->terlambat ? 'Terlambat' : 'Tidak Terlambat' }}</span>
-                                        <span
-                                            style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right">
-                                            Terlambat</span>
-                                    </li>
-                                    <hr style="color: rgb(204, 204, 204)">
-                                @endif
-
                                 <li class="mt-4"><span class="fa-solid fa-flag me-3"
                                         style="font-size: 20px; color:black"></span>
                                     <span style="color:black; font-size:14px">{{ $poi->status }}</span> <span
@@ -153,11 +141,11 @@
                                 <hr style="color: rgb(204, 204, 204)">
                                 <li class="mt-4"><span class="fa-solid fa-calendar-check me-3"
                                         style="font-size: 20px; color:black"></span>
-                                    <span style="color:black; font-size:14px">{{ $tgl_mulai->format('d M Y') }}</span>
+                                    <span
+                                        style="color:black; font-size:14px">{{ $tgl_mulai ? $tgl_mulai->format('d M Y') : '-' }}</span>
                                     <span
                                         style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right">
-                                        Tanggal
-                                        Mulai</span>
+                                        Deadline</span>
                                 </li>
                                 <hr style="color: rgb(204, 204, 204)">
                             </ul>
@@ -266,7 +254,7 @@
                                             Email</span>
                                     </li>
                                     <hr style="color: rgb(204, 204, 204)">
-                                    <li class="mt-4"><span class="icon-phone me-3"
+                                    <li class="mt-4"><span class="fa-solid fa-phone me-3"
                                             style="font-size: 20px; color:black"></span>
                                         <span style="color:black; font-size:14px">{{ $pegawai->telepon }}</span> <span
                                             style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right">

@@ -46,7 +46,9 @@
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="detail-poi-modalLabel">{{ \Carbon\Carbon::parse($detail_poi->created_at)->locale('id_ID')->format('d M Y - H:i') }} WIB</h5>
+                                                    <h5 class="modal-title" id="detail-poi-modalLabel">
+                                                        {{ \Carbon\Carbon::parse($detail_poi->created_at)->locale('id_ID')->format('d M Y - H:i') }}
+                                                        WIB</h5>
                                                     <button class="btn-close" type="button" data-bs-dismiss="modal"
                                                         aria-label="Close"></button>
                                                 </div>
@@ -81,7 +83,7 @@
                             </div>
                             @php
                                 $tgl = new DateTime($poi->tanggal);
-                                $tgl_mulai = new DateTime($poi->tanggal_mulai);
+                                $tgl_mulai = $poi->tanggal_mulai ? new DateTime($poi->tanggal_mulai) : null;
                             @endphp
                             <ul class="mt-2">
                                 <li class="mt-4"><span class="fa-solid fa-bullseye me-3"
@@ -141,11 +143,11 @@
                                 <hr style="color: rgb(204, 204, 204)">
                                 <li class="mt-4"><span class="fa-solid fa-calendar-check me-3"
                                         style="font-size: 20px; color:black"></span>
-                                    <span style="color:black; font-size:14px">{{ $tgl_mulai->format('d M Y') }}</span>
+                                    <span
+                                        style="color:black; font-size:14px">{{ $tgl_mulai ? $tgl_mulai->format('d M Y') : '-' }}</span>
                                     <span
                                         style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right">
-                                        Tanggal
-                                        Mulai</span>
+                                        Deadline</span>
                                 </li>
                                 <hr style="color: rgb(204, 204, 204)">
                             </ul>

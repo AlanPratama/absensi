@@ -42,7 +42,7 @@
                                     <th>Pelanggan</th>
                                     <th>Pegawai</th>
                                     <th>Tanggal</th>
-                                    <th>Tanggal Mulai</th>
+                                    <th>Deadline</th>
                                     <th>Target</th>
                                     <th>Foto</th>
                                     {{-- <th>Kategori</th> --}}
@@ -60,7 +60,9 @@
                                         <td>{{ $poi->tanggal }}</td>
                                         <td>{{ $poi->tanggal_mulai ? $poi->tanggal_mulai : '-' }}</td>
                                         <td>
-                                            {{ $poi->target }}
+                                            {{ $poi->target }} @if ($poi->jumlah_nominal)
+                                                <br> ({{ 'Rp. ' . number_format($poi->jumlah_nominal, 0, ',', '.') }})
+                                            @endif
                                             <br>
                                             <span class="badge badge-info">{{ $poi->tipe }}</span>
                                             <span
@@ -84,8 +86,10 @@
                                                 <span class="badge badge-warning">{{ $poi->status }}</span>
                                             @elseif($poi->status == 'Done')
                                                 <span class="badge badge-success">{{ $poi->status }}</span>
-                                            @else
+                                            @elseif($poi->status == 'Expired')
                                                 <span class="badge badge-danger">{{ $poi->status }}</span>
+                                            @else
+                                                <span class="badge badge-secondary">{{ $poi->status }}</span>
                                             @endif
                                         </td>
                                         <td>

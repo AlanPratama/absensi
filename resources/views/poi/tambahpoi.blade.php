@@ -1,5 +1,58 @@
 @extends('templates.dashboard')
 @section('isi')
+    {{-- @push('style')
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+            integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+            crossorigin="" />
+        <style>
+            #mapid {
+                min-height: 500px;
+            }
+        </style>
+    @endpush --}}
+    @push('script')
+        {{-- <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+            integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+            crossorigin=""></script> --}}
+
+        <script>
+            var mapCenter = [
+                {{ -6.2208658525024605 }},
+                {{ 106.87877079945511 }},
+            ];
+            var map = L.map('mapid').setView(mapCenter, {{ 80 }});
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            var marker = L.marker(mapCenter).addTo(map);
+
+            function updateMarker(lat, lng) {
+                marker
+                    .setLatLng([lat, lng])
+                    .bindPopup("Lokasi POI: " + marker.getLatLng().toString())
+                    .openPopup();
+                return false;
+            };
+            map.on('click', function(e) {
+                let latitude = e.latlng.lat.toString().substring(0, 15);
+                let longitude = e.latlng.lng.toString().substring(0, 15);
+                $('#lat_poi').val(latitude);
+                $('#long_poi').val(longitude);
+                updateMarker(latitude, longitude);
+            });
+            var updateMarkerByInputs = function() {
+                return updateMarker($('#lat_poi').val(), $('#long_poi').val());
+            }
+            $('#lat_poi').on('input', updateMarkerByInputs);
+            $('#long_poi').on('input', updateMarkerByInputs);
+
+            $('#buka_map').on('click', function() {
+                $('#mapid').toggleClass('d-none');
+                $('#buka_map').text($('#mapid').hasClass('d-none') ? 'Buka Map' : 'Tutup Map');
+            })
+        </script>
+    @endpush
+
     <div class="row">
         <div class="col-md-12 m project-list">
             <div class="card">
@@ -20,7 +73,7 @@
                     @csrf
                     <div class="form-row">
                         <div class="col mb-4">
-                            <label for="pegawai_id">Nama Pegawai</label>
+                            <label for="pegawai_id">Nama Pegawai (opsional)</label>
                             <select id="pegawai_id" name="pegawai_id" class="form-control selectpicker" id="">
                                 <option value="">Pilih Pegawai</option>
                                 @foreach ($data_pegawai as $pegawai)
@@ -93,8 +146,10 @@
                             <label for="tipe">Tipe POI</label>
                             <select id="tipe" name="tipe" class="form-control selectpicker" id="tipe">
                                 <option value="">Pilih Tipe POI</option>
-                                <option @if (old('tipe') == 'Kuantitas') selected @endif value="Kuantitas">Kuantitas</option>
-                                <option @if (old('tipe') == 'Deskriptif') selected @endif value="Deskriptif">Deskriptif</option>
+                                <option @if (old('tipe') == 'Kuantitas') selected @endif value="Kuantitas">Kuantitas
+                                </option>
+                                <option @if (old('tipe') == 'Deskriptif') selected @endif value="Deskriptif">Deskriptif
+                                </option>
                             </select>
                             @error('tipe')
                                 <div class="invalid-feedback">
@@ -116,8 +171,8 @@
 
                         <div class="col mb-4">
                             <label for="lat_poi">Lat POI (opsional)</label>
-                            <input type="numeric" class="form-control numeric @error('lat_poi') is-invalid @enderror" id="lat_poi"
-                                name="lat_poi" value="{{ old('lat_poi') }}">
+                            <input type="decimal" class="form-control numeric @error('lat_poi') is-invalid @enderror"
+                                id="lat_poi" name="lat_poi" value="{{ old('lat_poi') }}">
                             @error('lat_poi')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -127,7 +182,7 @@
 
                         <div class="col mb-4">
                             <label for="long_poi">Long POI (opsional)</label>
-                            <input type="numeric" class="form-control numeric @error('long_poi') is-invalid @enderror"
+                            <input type="decimal" class="form-control numeric @error('long_poi') is-invalid @enderror"
                                 id="long_poi" name="long_poi" value="{{ old('long_poi') }}">
                             @error('long_poi')
                                 <div class="invalid-feedback">
@@ -135,13 +190,19 @@
                                 </div>
                             @enderror
                         </div>
+                        <div class="container rounded shadow-sm w-100 mb-4" style="height: 500px; z-index: 0" id="mapid"></div>
                         <div class="col mb-4">
-                            <label for="tanggal_mulai">Tanggal Mulai (opsional)</label>
-                            <input type="datetime" class="form-control @error('tanggal_mulai') is-invalid @enderror" name="tanggal_mulai" id="tanggal_mulai" value="{{ old('tanggal_mulai') }}">
+                            <button type="button" id="buka_map" class="btn form-control btn-primary">Tutup Map</button>
+                        </div>
+
+                        <div class="col mb-4">
+                            <label for="tanggal_mulai">Deadline (opsional)</label>
+                            <input type="datetime" class="form-control @error('tanggal_mulai') is-invalid @enderror"
+                                name="tanggal_mulai" id="tanggal_mulai" value="{{ old('tanggal_mulai') }}">
                             @error('tanggal_mulai')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
                             @enderror
                         </div>
                     </div>

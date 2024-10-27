@@ -1,5 +1,20 @@
 @extends('templates.app')
 @section('container')
+    @if (Session::has('error'))
+        @push('script')
+            <script>
+                Swal.fire({
+                    title: 'Terjadi Error!',
+                    text: '{{ Session::get('error') }}',
+                    icon: 'error',
+                })
+                setTimeout(() => {
+                    Swal.close()
+                }, 10000)
+            </script>
+        @endpush
+    @endif
+
     <div class="card-secton transfer-section">
         <div class="tf-container">
             <div class="tf-balance-box">
@@ -10,18 +25,20 @@
                         <div class="mb-1 d-flex justify-content-between">
                             <h5>Point Of Interest</h5>
                             <div class="d-flex align-items-center gap-2">
-                                @if ($poi->status != 'Pending' && $poi->terlambat)
+                                {{-- @if ($poi->status != 'Pending' && $poi->terlambat)
                                     <h5 class="badge bg-danger">Terlambat</h5>
-                                @endif
+                                @endif --}}
 
                                 @if ($poi->status == 'Pending')
-                                    <h5 class="badge bg-info">{{ $poi->status }}</h5>
+                                    <span class="badge bg-info">{{ $poi->status }}</span>
                                 @elseif($poi->status == 'In Progress')
-                                    <h5 class="badge bg-warning">{{ $poi->status }}</h5>
+                                    <span class="badge bg-warning">{{ $poi->status }}</span>
                                 @elseif($poi->status == 'Done')
-                                    <h5 class="badge bg-success">{{ $poi->status }}</h5>
+                                    <span class="badge bg-success">{{ $poi->status }}</span>
+                                @elseif($poi->status == 'Expired')
+                                    <span class="badge bg-danger">{{ $poi->status }}</span>
                                 @else
-                                    <h5 class="badge bg-danger">{{ $poi->status }}</h5>
+                                    <span class="badge bg-secondary">{{ $poi->status }}</span>
                                 @endif
                             </div>
                         </div>
@@ -51,13 +68,13 @@
                     @endif
                 @else
                     @if ($poi->status != 'Done' || $poi->status != 'Cancel')
-                        @if ($poi->status == 'Pending')
+                        @if ($poi->status == 'Pending' || $poi->status == 'Expired')
                             <form action="{{ url('/inbox-poi/change-status/' . $poi->id) }}" method="post">
                                 @csrf
                                 @method('patch')
                                 <input type="hidden" name="status" value="In Progress">
                                 <button onClick="return confirm('Are You Sure')" type="submit"
-                                    class="btn btn-primary btn-sm"><i class="fa-solid fa-gear mr-2"></i> Sedang
+                                    class="btn btn-primary btn-sm"><i class="fa-solid fa-gear mr-2"></i> Mulai
                                     Dikerjakan</button>
                             </form>
                         @elseif ($poi->status == 'In Progress')
@@ -201,7 +218,7 @@
             </div>
             @php
                 $tgl = new DateTime($poi->tanggal);
-                $tgl_mulai = new DateTime($poi->tanggal_mulai);
+                $tgl_mulai = $poi->tanggal_mulai ? new DateTime($poi->tanggal_mulai) : null;
             @endphp
             <ul class="mt-2">
                 <li class="mt-4"><span class="fa-solid fa-bullseye me-3" style="font-size: 20px; color:black"></span>
@@ -233,7 +250,7 @@
                         style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right"> Kategori</span>
                 </li>
                 <hr style="color: rgb(204, 204, 204)">
-                @if ($poi->status != 'Pending')
+                {{-- @if ($poi->status != 'Pending')
                     <li class="mt-4"><span class="fa-solid fa-circle-exclamation me-3"
                             style="font-size: 20px; color:black"></span>
                         <span
@@ -242,7 +259,7 @@
                             Terlambat</span>
                     </li>
                     <hr style="color: rgb(204, 204, 204)">
-                @endif
+                @endif --}}
                 <li class="mt-4"><span class="fa-solid fa-flag me-3" style="font-size: 20px; color:black"></span>
                     <span style="color:black; font-size:14px">{{ $poi->status }}</span> <span
                         style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right"> Status</span>
@@ -257,9 +274,9 @@
                 <hr style="color: rgb(204, 204, 204)">
                 <li class="mt-4"><span class="fa-solid fa-calendar-check me-3"
                         style="font-size: 20px; color:black"></span>
-                    <span style="color:black; font-size:14px">{{ $tgl_mulai->format('d M Y') }}</span> <span
-                        style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right"> Tanggal
-                        Mulai</span>
+                    <span style="color:black; font-size:14px">{{ $tgl_mulai ? $tgl_mulai->format('d M Y') : '-' }}</span>
+                    <span style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right">
+                        Deadline</span>
                 </li>
                 <hr style="color: rgb(204, 204, 204)">
                 {{-- {{ $tgl_lahir->format('d M Y') }} --}}

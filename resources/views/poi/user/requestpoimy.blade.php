@@ -49,7 +49,7 @@
                                         <span class="primary_color">View</span></a></h4>
                                 <div class="d-flex align-items-center justify-content-between">
                                     <p>
-                                        {{ $poi->tanggal_mulai ?? '- tidak ada tanggal mulai' }}
+                                        {{ $poi->tanggal_mulai ?? '- tidak ada deadline' }}
                                     </p>
                                     @if ($poi->status == 'Pending')
                                         <span class="badge bg-info">{{ $poi->status }}</span>
@@ -57,8 +57,10 @@
                                         <span class="badge bg-warning">{{ $poi->status }}</span>
                                     @elseif($poi->status == 'Done')
                                         <span class="badge bg-success">{{ $poi->status }}</span>
-                                    @else
+                                    @elseif($poi->status == 'Expired')
                                         <span class="badge bg-danger">{{ $poi->status }}</span>
+                                    @else
+                                        <span class="badge bg-secondary">{{ $poi->status }}</span>
                                     @endif
                                 </div>
                             </div>

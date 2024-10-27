@@ -8,6 +8,7 @@ use App\Models\DetailPOI;
 use App\Models\User;
 use App\Models\Pelanggan;
 use App\Models\KategoriPOI;
+use App\Models\MappingShift;
 use App\Models\PermintaanPOI;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -201,9 +202,13 @@ class PoiController extends Controller
             Storage::delete($poi->foto);
         }
 
-        if($poi->DetailPOI) {
-            if($poi->DetailPOI->foto) Storage::delete($poi->DetailPOI->foto);
-            if($poi->DetailPOI->tanda_tangan) Storage::delete($poi->DetailPOI->tanda_tangan);
+        if ($poi->DetailPOI) {
+            if ($poi->DetailPOI->foto) {
+                Storage::delete($poi->DetailPOI->foto);
+            }
+            if ($poi->DetailPOI->tanda_tangan) {
+                Storage::delete($poi->DetailPOI->tanda_tangan);
+            }
             $poi->DetailPOI->delete();
         }
 
@@ -252,6 +257,15 @@ class PoiController extends Controller
     public function changeStatusInboxPoi(Request $request, $id)
     {
         date_default_timezone_set('Asia/Jakarta');
+        $mp = MappingShift::where('user_id', auth()->user()->id)
+                            ->where('tanggal', Carbon::now()->toDateString())
+                            ->where('jam_absen', '!=', null)
+                            ->first();
+
+        if(!$mp) {
+            return redirect()->back()->with('error', 'Sebelum Memulai, Silahkan Absen Terlebih Dahulu!');
+        }
+
 
         $user = auth()->user();
         $data = POI::where('id', $id)
@@ -262,20 +276,26 @@ class PoiController extends Controller
             return redirect('/inbox-poi');
         }
 
+        if ($data->status == 'Expired') {
+            return redirect()->back()->with('error', 'Kamu Terlambat Untuk Memulai, POI Telah Expired. Silahkan Hubungi Admin Untuk Melanjutkan!');
+        }
+
         if ($request->status == 'In Progress') {
             $message = '';
+            $type = 'success';
 
             if ($data->tanggal_mulai && Carbon::now()->toDateString() > $data->tanggal_mulai) {
-                $data->terlambat = true;
-                $message = 'Status POI Telah Berubah Menjadi In Progress, Namun Kamu Terlambat!';
+                $data->status = 'Expired';
+                $message = 'Kamu Terlambat Untuk Memulai, POI Telah Expired. Silahkan Hubungi Admin Untuk Melanjutkan!';
+                $type = 'error';
             } else {
                 $message = 'Status POI Telah Berubah Menjadi In Progress';
+                $data->status = 'In Progress';
             }
 
-            $data->status = 'In Progress';
             $data->save();
 
-            return redirect()->back()->with('success', $message);
+            return redirect()->back()->with($type, $message);
         } elseif ($request->status == 'Done') {
             return redirect()->back();
             // dd("status done");
@@ -314,7 +334,6 @@ class PoiController extends Controller
         $permintaanPoi->pegawai_id = auth()->user()->id;
         $permintaanPoi->pesan = $request->pesan;
         $permintaanPoi->foto = $request->file('foto')->store('foto_poi/detail_poi');
-
 
         $image_parts = explode(';base64,', $request->signed);
         $image_type_aux = explode('image/', $image_parts[0]);

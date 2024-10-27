@@ -27,7 +27,6 @@ class CreatePOISTable extends Migration
 
             $table->date('tanggal');
             $table->date('tanggal_mulai')->nullable();
-            $table->boolean('terlambat')->nullable()->default(false);
 
             $table->string('target');
 
@@ -40,7 +39,7 @@ class CreatePOISTable extends Migration
 
 
             $table->enum('tipe', ['Kuantitas', 'Deskriptif']);
-            $table->enum('status', ['Pending', 'In Progress', 'Done', 'Cancel'])->default('Pending');
+            $table->enum('status', ['Pending', 'In Progress', 'Expired','Done', 'Cancel'])->default('Pending');
 
             $table->timestamps();
         });
