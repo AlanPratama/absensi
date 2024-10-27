@@ -31,9 +31,8 @@ class CreatePOISTable extends Migration
 
             $table->string('target');
 
-            // HANYA UNTUK QUANTITY
+            // HANYA UNTUK KUANTITAS
             $table->integer('jumlah_nominal')->nullable();
-            $table->integer('nominal_akhir')->nullable();
 
             $table->string('lat_poi')->nullable();
             $table->string('long_poi')->nullable();

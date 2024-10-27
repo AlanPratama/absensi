@@ -49,20 +49,102 @@
                     @endif
                 @else
                     @if ($poi->status != 'Done' || $poi->status != 'Cancel')
-                        <form action="{{ url('/inbox-poi/change-status/' . $poi->id) }}" method="post">
-                            @csrf
-                            @method('patch')
-                            @if ($poi->status == 'Pending')
+                        @if ($poi->status == 'Pending')
+                            <form action="{{ url('/inbox-poi/change-status/' . $poi->id) }}" method="post">
+                                @csrf
+                                @method('patch')
                                 <input type="hidden" name="status" value="In Progress">
-                                <button onClick="return confirm('Are You Sure')" type="submit" class="btn btn-primary">Sedang Dikerjakan</button>
-                            @elseif ($poi->status == 'In Progress')
-                                {{-- INI NANTI DIGANTI JADI MODAL, SOALNYA PERLU INPUT POI DETAIL --}}
+                                <button onClick="return confirm('Are You Sure')" type="submit"
+                                    class="btn btn-primary btn-sm"><i class="fa fa-table mr-2"></i> Sedang
+                                    Dikerjakan</button>
+                            </form>
+                        @elseif ($poi->status == 'In Progress')
+                            @push('style')
+                                {{-- sign --}}
+                                <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+                                <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+                                <script type="text/javascript" src="http://keith-wood.name/js/jquery.signature.js"></script>
+                                <link rel="stylesheet" type="text/css" href="http://keith-wood.name/css/jquery.signature.css">
+                                {{-- end sign --}}
+                            @endpush
+                            <div>
                                 <input type="hidden" name="status" value="Done">
-                                {{-- INI NANTI DIGANTI JADI MODAL, SOALNYA PERLU INPUT POI DETAIL --}}
-                                <button type="submit" class="btn btn-success">Sudah Diselesaikan</button>
-                                {{-- INI NANTI DIGANTI JADI MODAL, SOALNYA PERLU INPUT POI DETAIL --}}
-                            @endif
-                        </form>
+                                <button class="btn btn-success btn-sm" type="button" data-bs-toggle="modal"
+                                    data-original-title="test" data-bs-target="#exampleModal"><i
+                                        class="fa fa-table mr-2"></i>
+                                    Sudah Diselesaikan</button>
+                            </div>
+
+                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">POI Selesai</h5>
+                                            <button class="btn-close" type="button" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <form action="{{ url('/inbox-poi/poi-detail/' . $poi->id) }}" method="POST"
+                                            enctype="multipart/form-data">
+                                            <div class="modal-body">
+                                                @csrf
+                                                <div class="form-group mb-4">
+                                                    <label for="pesan">Pesan</label>
+                                                    <input type="text" name="pesan" id="pesan"
+                                                        class="form-control @error('pesan') is-invalid @enderror">
+                                                    @error('pesan')
+                                                        <div class="invalid-feedback">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
+                                                </div>
+                                                <div class="form-group mb-4">
+                                                    <label for="foto">Unggah Foto</label>
+                                                    <input type="file" accept="image/*" name="foto" id="foto"
+                                                        class="form-control @error('foto') is-invalid @enderror">
+                                                    @error('foto')
+                                                        <div class="invalid-feedback">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
+                                                </div>
+                                                <div class="form-group mb-4">
+                                                    <label for="">Signature:</label>
+                                                    <div>
+                                                        <div class="rounded shadow-sm border @error('signed') is-invalid @enderror"
+                                                            id="sig"></div>
+                                                        <button id="clear" class="mt-2 btn btn-warning btn-sm">Clear
+                                                            Signature</button>
+                                                        <textarea id="signature64" name="signed" style="display: none"></textarea>
+                                                    </div>
+                                                    @error('signed')
+                                                        <div class="invalid-feedback">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-secondary" type="button"
+                                                    data-bs-dismiss="modal">Close</button>
+                                                <button class="btn btn-primary" type="submit">Submit</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <script type="text/javascript">
+                                var sig = $('#sig').signature({
+                                    syncField: '#signature64',
+                                    syncFormat: 'PNG'
+                                });
+                                $('#clear').click(function(e) {
+                                    e.preventDefault();
+                                    sig.signature('clear');
+                                    $("#signature64").val('');
+                                });
+                            </script>
+                        @endif
                     @endif
                 @endif
             </div>
@@ -96,27 +178,29 @@
                     <hr style="color: rgb(204, 204, 204)"> --}}
                 @endif
 
-                <li class="mt-4"><span class="fa fa-user-secret me-3" style="font-size: 20px; color:black"></span> <span
-                        style="color:black; font-size:14px">{{ $poi->KategoriPOI->kategori ?? '-' }}</span> <span
+                <li class="mt-4"><span class="fa fa-user-secret me-3" style="font-size: 20px; color:black"></span>
+                    <span style="color:black; font-size:14px">{{ $poi->KategoriPOI->kategori ?? '-' }}</span> <span
                         style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right"> Kategori</span>
                 </li>
                 <hr style="color: rgb(204, 204, 204)">
 
-                <li class="mt-4"><span class="fa fa-user-secret me-3" style="font-size: 20px; color:black"></span> <span
-                        style="color:black; font-size:14px">{{ $poi->status }}</span> <span
+                <li class="mt-4"><span class="fa fa-user-secret me-3" style="font-size: 20px; color:black"></span>
+                    <span style="color:black; font-size:14px">{{ $poi->status }}</span> <span
                         style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right"> Status</span>
                 </li>
                 <hr style="color: rgb(204, 204, 204)">
 
-                <li class="mt-4"><span class="fa fa-user-secret me-3" style="font-size: 20px; color:black"></span> <span
-                        style="color:black; font-size:14px">{{ $tgl->format('d M Y') }}</span> <span
+                <li class="mt-4"><span class="fa fa-user-secret me-3" style="font-size: 20px; color:black"></span>
+                    <span style="color:black; font-size:14px">{{ $tgl->format('d M Y') }}</span> <span
                         style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right"> Tanggal
-                        Dibuat</span></li>
+                        Dibuat</span>
+                </li>
                 <hr style="color: rgb(204, 204, 204)">
-                <li class="mt-4"><span class="fa fa-user-secret me-3" style="font-size: 20px; color:black"></span> <span
-                        style="color:black; font-size:14px">{{ $tgl_mulai->format('d M Y') }}</span> <span
+                <li class="mt-4"><span class="fa fa-user-secret me-3" style="font-size: 20px; color:black"></span>
+                    <span style="color:black; font-size:14px">{{ $tgl_mulai->format('d M Y') }}</span> <span
                         style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right"> Tanggal
-                        Mulai</span></li>
+                        Mulai</span>
+                </li>
                 <hr style="color: rgb(204, 204, 204)">
 
                 {{-- <li class="mt-4"><span class="fa fa-user-secret me-3" style="font-size: 20px; color:black"></span> <span
@@ -165,9 +249,10 @@
                 <li class="list-user-info"><span class="fa fa-building"></span>{{ $poi->Pelanggan->tipe }}</li>
                 <li class="list-user-info"><span class="fa fa-map-marker"></span>{{ $poi->Pelanggan->alamat }}</li>
                 <li class="list-user-info"><span class="icon-phone"></span>{{ $poi->Pelanggan->no_telepon }}</li>
-                <li class="mt-4"><span class="fa fa-user-secret me-3" style="font-size: 20px; color:black"></span> <span
-                        style="color:black; font-size:14px">{{ $poi->Pelanggan->no_telepon_pic }}</span> <span
-                        style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right"> Test</span></li>
+                <li class="mt-4"><span class="fa fa-user-secret me-3" style="font-size: 20px; color:black"></span>
+                    <span style="color:black; font-size:14px">{{ $poi->Pelanggan->no_telepon_pic }}</span> <span
+                        style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right"> Test</span>
+                </li>
                 <hr style="color: rgb(204, 204, 204)">
                 {{-- {{ $tgl_lahir->format('d M Y') }} --}}
             </ul>

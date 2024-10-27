@@ -24,8 +24,7 @@ class CreateDetailPOISTable extends Migration
 
             $table->text('pesan');
             $table->string('foto')->nullable();
-
-            $table->enum('tipe_tanda_tangan', ['Pegawai', 'Pelanggan']);
+            $table->string('tanda_tangan');
 
             $table->timestamps();
         });

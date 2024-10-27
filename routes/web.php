@@ -303,6 +303,7 @@ Route::patch('/data-poi/permintaan/{id}', [PermintaanPOIController::class, 'proc
 Route::get("/inbox-poi", [PoiController::class, 'indexInboxPoi'])->middleware('auth');
 Route::get("/inbox-poi/detail/{id}", [PoiController::class, 'showInboxPoi'])->middleware('auth');
 Route::patch("/inbox-poi/change-status/{id}", [PoiController::class, 'changeStatusInboxPoi'])->middleware('auth');
+Route::post("/inbox-poi/poi-detail/{id}", [PoiController::class, 'inboxPoiDetailProcess'])->middleware('auth');
 
 Route::get("/request-poi", [PermintaanPOIController::class, 'indexRequestPoi'])->middleware('auth');
 Route::get("/request-poi/my", [PermintaanPOIController::class, 'myRequestPoi'])->middleware('auth');

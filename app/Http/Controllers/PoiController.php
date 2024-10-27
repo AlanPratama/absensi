@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\POI;
 use App\Models\Cuti;
+use App\Models\DetailPOI;
 use App\Models\User;
 use App\Models\Pelanggan;
 use App\Models\KategoriPOI;
+use App\Models\PermintaanPOI;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -21,24 +23,27 @@ class PoiController extends Controller
         $akhir = request()->input('akhir');
 
         $poi = POI::when($mulai && $akhir, function ($query) use ($mulai, $akhir) {
-                        return $query->whereBetween('tanggal_mulai', [$mulai, $akhir]);
-                    })
-                    ->orderBy('id', 'desc')->paginate(10)->withQueryString();
+            return $query->where(function ($q) use ($mulai, $akhir) {
+                $q->whereBetween('tanggal_mulai', [$mulai, $akhir])->orWhereNull('tanggal_mulai');
+            });
+        })
+            ->orderBy('id', 'desc')
+            ->paginate(10)
+            ->withQueryString();
 
         return view('poi.datapoi', [
             'title' => 'Data POI Pegawai',
-            'data_poi' => $poi
+            'data_poi' => $poi,
         ]);
     }
 
     public function create()
     {
-
         return view('poi.tambahpoi', [
             'title' => 'Tambah POI Pegawai',
             'data_pelanggan' => Pelanggan::orderBy('nama', 'ASC')->get(),
-            'data_pegawai' => User::where("is_admin", "!=", "admin")->orderBy('name', 'ASC')->get(),
-            'data_kategori_poi' => KategoriPOI::orderBy('kategori', 'ASC')->get()
+            'data_pegawai' => User::where('is_admin', '!=', 'admin')->orderBy('name', 'ASC')->get(),
+            'data_kategori_poi' => KategoriPOI::orderBy('kategori', 'ASC')->get(),
         ]);
     }
 
@@ -47,22 +52,28 @@ class PoiController extends Controller
         // dd($request->all());
         date_default_timezone_set('Asia/Jakarta');
 
-        $request->validate([
-            // "pegawai_id" => "required",
-            "pelanggan_id" => "required",
-            "kategori_poi_id" => "required",
-            "target" => "required",
-            "tipe" => "required",
-        ], [
-            // "pegawai_id.required" => "Pegawai harus diisi",
-            "pelanggan_id.required" => "Pelanggan harus diisi",
-            "kategori_poi_id.required" => "Kategori POI harus diisi",
-            "target.required" => "Target POI harus diisi",
-            "tipe.required" => "Tipe POI harus diisi",
-        ]);
+        $request->validate(
+            [
+                // "pegawai_id" => "required",
+                'pelanggan_id' => 'required',
+                'kategori_poi_id' => 'required',
+                'target' => 'required',
+                'tipe' => 'required',
+            ],
+            [
+                // "pegawai_id.required" => "Pegawai harus diisi",
+                'pelanggan_id.required' => 'Pelanggan harus diisi',
+                'kategori_poi_id.required' => 'Kategori POI harus diisi',
+                'target.required' => 'Target POI harus diisi',
+                'tipe.required' => 'Tipe POI harus diisi',
+            ],
+        );
 
-        if ($request->tipe == "Kuantitas" && $request->jumlah_nominal <= 0) $request["jumlah_nominal"] = 0;
-        elseif($request->tipe == "Kuantitas") $request['jumlah_nominal'] = str_replace(',', '', $request['jumlah_nominal']);
+        if ($request->tipe == 'Kuantitas' && $request->jumlah_nominal <= 0) {
+            $request['jumlah_nominal'] = 0;
+        } elseif ($request->tipe == 'Kuantitas') {
+            $request['jumlah_nominal'] = str_replace(',', '', $request['jumlah_nominal']);
+        }
 
         $poi = new POI();
         $poi->pegawai_id = $request->pegawai_id;
@@ -76,7 +87,7 @@ class PoiController extends Controller
         $poi->lat_poi = $request->lat_poi;
         $poi->long_poi = $request->long_poi;
 
-        if($request->hasFile("foto")) {
+        if ($request->hasFile('foto')) {
             $poi->foto = $request->file('foto')->store('foto_poi/poi');
         }
 
@@ -106,8 +117,8 @@ class PoiController extends Controller
             'title' => 'Edit POI Pegawai',
             'poi' => $poi,
             'data_pelanggan' => Pelanggan::orderBy('nama', 'ASC')->get(),
-            'data_pegawai' => User::where("is_admin", "!=", "admin")->orderBy('name', 'ASC')->get(),
-            'data_kategori_poi' => KategoriPOI::orderBy('kategori', 'ASC')->get()
+            'data_pegawai' => User::where('is_admin', '!=', 'admin')->orderBy('name', 'ASC')->get(),
+            'data_kategori_poi' => KategoriPOI::orderBy('kategori', 'ASC')->get(),
         ]);
     }
 
@@ -115,21 +126,24 @@ class PoiController extends Controller
     {
         date_default_timezone_set('Asia/Jakarta');
 
-        $request->validate([
-            // "pegawai_id" => "required",
-            "pelanggan_id" => "required",
-            "kategori_poi_id" => "required",
-            "target" => "required",
-            "tipe" => "required",
-            "status" => "required",
-        ], [
-            // "pegawai_id.required" => "Pegawai harus diisi",
-            "pelanggan_id.required" => "Pelanggan harus diisi",
-            "kategori_poi_id.required" => "Kategori POI harus diisi",
-            "target.required" => "Target POI harus diisi",
-            "tipe.required" => "Tipe POI harus diisi",
-            "status.required" => "Status POI harus diisi",
-        ]);
+        $request->validate(
+            [
+                // "pegawai_id" => "required",
+                'pelanggan_id' => 'required',
+                'kategori_poi_id' => 'required',
+                'target' => 'required',
+                'tipe' => 'required',
+                'status' => 'required',
+            ],
+            [
+                // "pegawai_id.required" => "Pegawai harus diisi",
+                'pelanggan_id.required' => 'Pelanggan harus diisi',
+                'kategori_poi_id.required' => 'Kategori POI harus diisi',
+                'target.required' => 'Target POI harus diisi',
+                'tipe.required' => 'Tipe POI harus diisi',
+                'status.required' => 'Status POI harus diisi',
+            ],
+        );
 
         $poi = POI::find($id);
 
@@ -137,7 +151,9 @@ class PoiController extends Controller
             return redirect('/data-poi');
         }
 
-        if ($request->tipe == "Kuantitas" && $request->jumlah_nominal <= 0) $request["jumlah_nominal"] = 0;
+        if ($request->tipe == 'Kuantitas' && $request->jumlah_nominal <= 0) {
+            $request['jumlah_nominal'] = 0;
+        }
         // elseif($request->tipe == "Kuantitas") $request['jumlah_nominal'] = str_replace(',', '', $request['jumlah_nominal']);
 
         $poi->pegawai_id = $request->pegawai_id;
@@ -146,14 +162,14 @@ class PoiController extends Controller
         $poi->target = $request->target;
         $poi->tipe = $request->tipe;
         $poi->tanggal_mulai = $request->tanggal_mulai;
-        $poi->jumlah_nominal = $request->jumlah_nominal ? $request['jumlah_nominal'] = str_replace(',', '', $request['jumlah_nominal']) : $poi->jumlah_nominal;
+        $poi->jumlah_nominal = $request->jumlah_nominal ? ($request['jumlah_nominal'] = str_replace(',', '', $request['jumlah_nominal'])) : $poi->jumlah_nominal;
         $poi->tanggal = Carbon::now()->toDateString();
 
         $poi->lat_poi = $request->lat_poi;
         $poi->long_poi = $request->long_poi;
         $poi->status = $request->status;
 
-        if($request->hasFile("foto")) {
+        if ($request->hasFile('foto')) {
             if ($poi->foto) {
                 Storage::delete($poi->foto);
             }
@@ -184,9 +200,6 @@ class PoiController extends Controller
         return redirect('/data-poi')->with('success', 'Data Berhasil Dihapus');
     }
 
-
-
-
     // ===================
 
     public function indexInboxPoi()
@@ -209,7 +222,9 @@ class PoiController extends Controller
     public function showInboxPoi($id)
     {
         $user = auth()->user();
-        $data = POI::where('id', $id)->where('pegawai_id', $user->id)->first();
+        $data = POI::where('id', $id)
+            ->where('pegawai_id', $user->id)
+            ->first();
 
         if (!$data) {
             return redirect('/inbox-poi');
@@ -227,16 +242,18 @@ class PoiController extends Controller
         date_default_timezone_set('Asia/Jakarta');
 
         $user = auth()->user();
-        $data = POI::where('id', $id)->where('pegawai_id', $user->id)->first();
+        $data = POI::where('id', $id)
+            ->where('pegawai_id', $user->id)
+            ->first();
 
         if (!$data) {
             return redirect('/inbox-poi');
         }
 
-        if($request->status == 'In Progress') {
+        if ($request->status == 'In Progress') {
             $message = '';
 
-            if($data->tanggal_mulai && Carbon::now()->toDateString() > $data->tanggal_mulai) {
+            if ($data->tanggal_mulai && Carbon::now()->toDateString() > $data->tanggal_mulai) {
                 $data->terlambat = true;
                 $message = 'Status POI Telah Berubah Menjadi In Progress, Namun Kamu Terlambat!';
             } else {
@@ -247,10 +264,60 @@ class PoiController extends Controller
             $data->save();
 
             return redirect()->back()->with('success', $message);
-        } else if($request->status == 'Done') {
-            dd("status done");
+        } elseif ($request->status == 'Done') {
+            return redirect()->back();
+            // dd("status done");
+        }
+    }
+
+    public function inboxPoiDetailProcess(Request $request, $id)
+    {
+        date_default_timezone_set('Asia/Jakarta');
+
+        $request->validate(
+            [
+                'pesan' => 'required',
+                'foto' => 'required|file|mimes:png,jpg,jpeg|max:2048',
+                'signed' => 'required',
+            ],
+            [
+                'pesan.required' => 'Pesan Tidak Boleh Kosong',
+                'signed.required' => 'Tanda Tangan Tidak Boleh Kosong',
+                'foto.required' => 'Foto Tidak Boleh Kosong',
+                'foto.mimes' => 'File Harus Berupa PNG, JPG, atau JPEG',
+                'foto.max' => 'File Maksimal 2 MB',
+            ],
+        );
+
+        $poi = POI::where('id', $id)
+            ->where('pegawai_id', auth()->user()->id)
+            ->first();
+
+        if (!$poi) {
+            return redirect()->back();
         }
 
+        $permintaanPoi = new DetailPOI();
+        $permintaanPoi->poi_id = $poi->id;
+        $permintaanPoi->pegawai_id = auth()->user()->id;
+        $permintaanPoi->pesan = $request->pesan;
+        $permintaanPoi->foto = $request->file('foto')->store('foto_poi/detail_poi');
 
+
+        $image_parts = explode(';base64,', $request->signed);
+        $image_type_aux = explode('image/', $image_parts[0]);
+        $image_type = $image_type_aux[1] ?? '';
+        $image_base64 = base64_decode($image_parts[1] ?? '');
+        $fileName = uniqid() . time() . '.' . $image_type;
+        Storage::put('foto_poi/detail_poi/tanda_tangan_poi/' . $fileName, $image_base64);
+
+        $permintaanPoi->tanda_tangan = 'foto_poi/detail_poi/tanda_tangan_poi/' . $fileName;
+
+        $permintaanPoi->save();
+
+        $poi->status = 'Done';
+        $poi->save();
+
+        return redirect()->back()->with('success', 'POI Telah Selesai');
     }
 }
