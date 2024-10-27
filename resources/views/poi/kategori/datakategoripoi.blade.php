@@ -43,7 +43,7 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $kategori_poi->kategori }}</td>
-                                        <td>0</td>
+                                        <td>{{ $kategori_poi->POI->count() }}</td>
                                         <td>
                                             <ul class="action">
                                                 <li>
