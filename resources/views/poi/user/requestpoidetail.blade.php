@@ -44,7 +44,9 @@
                         <form action="{{ url('/request-poi/process/' . $poi->id) }}" method="post">
                             @csrf
                             @method('patch')
-                            <button type="submit" class="btn btn-primary">Request POI Ini</button>
+                            <button onClick="return confirm('Are You Sure')" type="submit"
+                                class="btn btn-primary btn-sm"><i class="fa-solid fa-hand mr-2"></i> Request POI
+                                Ini</button>
                         </form>
                     @endif
                 @else
@@ -55,7 +57,7 @@
                                 @method('patch')
                                 <input type="hidden" name="status" value="In Progress">
                                 <button onClick="return confirm('Are You Sure')" type="submit"
-                                    class="btn btn-primary btn-sm"><i class="fa fa-table mr-2"></i> Sedang
+                                    class="btn btn-primary btn-sm"><i class="fa-solid fa-gear mr-2"></i> Sedang
                                     Dikerjakan</button>
                             </form>
                         @elseif ($poi->status == 'In Progress')
@@ -70,17 +72,17 @@
                             <div>
                                 <input type="hidden" name="status" value="Done">
                                 <button class="btn btn-success btn-sm" type="button" data-bs-toggle="modal"
-                                    data-original-title="test" data-bs-target="#exampleModal"><i
+                                    data-original-title="POI Done" data-bs-target="#poi-done-modal"><i
                                         class="fa fa-table mr-2"></i>
                                     Sudah Diselesaikan</button>
                             </div>
 
-                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
-                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal fade" id="poi-done-modal" tabindex="-1" role="dialog"
+                                aria-labelledby="poi-done-modalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">POI Selesai</h5>
+                                            <h5 class="modal-title" id="poi-done-modalLabel">POI Selesai</h5>
                                             <button class="btn-close" type="button" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
                                         </div>
@@ -148,23 +150,71 @@
                     @endif
                 @endif
             </div>
-            <h2 class="mt-7">Detail POI (Point Of Interest)</h2>
+            <div class="d-flex align-items-center justify-content-between">
+                <h2 class="mt-7">Point Of Interest (POI)</h2>
+                @if ($poi->status == 'Done' && $poi->DetailPOI)
+                    @php
+                        $detail_poi = $poi->DetailPOI;
+                    @endphp
+                    <div>
+                        <button type="button" data-bs-toggle="modal" data-original-title="POI Done"
+                            data-bs-target="#detail-poi-modal" class="btn btn-primary btn-sm mt-7">Detail POI</button>
+                    </div>
+
+                    <div class="modal fade" id="detail-poi-modal" tabindex="-1" role="dialog"
+                        aria-labelledby="detail-poi-modalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="detail-poi-modalLabel">
+                                        {{ \Carbon\Carbon::parse($detail_poi->created_at)->locale('id_ID')->format('d M Y - H:i') }}
+                                        WIB</h5>
+                                    <button class="btn-close" type="button" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div>
+                                    <div class="modal-body">
+
+                                        <h2 class="mb-1"><span class="fa-solid fa-message me-2"
+                                                style="font-size: 20px; color:black"></span>Pesan</h2>
+                                        <span style="color:black; font-size:14px">{{ $detail_poi->pesan }}</span>
+                                        <h2 class="mt-3 mb-1"><span class="fa-solid fa-image me-2"
+                                                style="font-size: 20px; color:black"></span>Foto</h2>
+                                        <img class="w-100 rounded shadow-sm"
+                                            src="{{ url('/storage/' . $detail_poi->foto) }}"
+                                            alt="{{ $detail_poi->pesan }}" class="shadow-sm rounded">
+                                        <h2 class="mt-3 mb-1"><span class="fa-solid fa-file-signature me-2"
+                                                style="font-size: 20px; color:black"></span>Tanda Tangan</h2>
+                                        <img class="w-100 rounded shadow-sm"
+                                            src="{{ url('/storage/' . $detail_poi->tanda_tangan) }}"
+                                            alt="{{ $detail_poi->pesan }}" class="shadow-sm rounded">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-bs-dismiss="modal" class="btn btn-primary"
+                                            type="button">OK</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+            </div>
             @php
                 $tgl = new DateTime($poi->tanggal);
                 $tgl_mulai = new DateTime($poi->tanggal_mulai);
             @endphp
             <ul class="mt-2">
-                {{-- <li class="mt-4"><span class="fa fa-user-secret me-3" style="font-size: 20px; color:black"></span> <span
-                        style="color:black; font-size:14px">{{ $poi->target }}</span> <span
-                        style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right"> Test</span></li>
-                <hr style="color: rgb(204, 204, 204)"> --}}
-
-                <li class="mt-4"><span class="fa fa-user-secret me-3" style="font-size: 20px; color:black"></span> <span
+                <li class="mt-4"><span class="fa-solid fa-bullseye me-3" style="font-size: 20px; color:black"></span>
+                    <span style="color:black; font-size:14px">{{ $poi->target }}</span> <span
+                        style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right"> Target</span>
+                </li>
+                <hr style="color: rgb(204, 204, 204)">
+                <li class="mt-4"><span class="fa-solid fa-file me-3" style="font-size: 20px; color:black"></span> <span
                         style="color:black; font-size:14px">{{ $poi->tipe }}</span> <span
                         style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right"> Tipe</span></li>
                 <hr style="color: rgb(204, 204, 204)">
                 @if ($poi->tipe == 'Kuantitas')
-                    <li class="mt-4"><span class="fa fa-user-secret me-3" style="font-size: 20px; color:black"></span>
+                    <li class="mt-4"><span class="fa fa-rupiah-sign me-3" style="font-size: 20px; color:black"></span>
                         <span
                             style="color:black; font-size:14px">{{ 'Rp. ' . number_format($poi->jumlah_nominal, 0, ',', '.') }}</span>
                         <span style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right"> Jumlah
@@ -178,36 +228,40 @@
                     <hr style="color: rgb(204, 204, 204)"> --}}
                 @endif
 
-                <li class="mt-4"><span class="fa fa-user-secret me-3" style="font-size: 20px; color:black"></span>
+                <li class="mt-4"><span class="fa-solid fa-file-lines me-3" style="font-size: 20px; color:black"></span>
                     <span style="color:black; font-size:14px">{{ $poi->KategoriPOI->kategori ?? '-' }}</span> <span
                         style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right"> Kategori</span>
                 </li>
                 <hr style="color: rgb(204, 204, 204)">
-
-                <li class="mt-4"><span class="fa fa-user-secret me-3" style="font-size: 20px; color:black"></span>
+                @if ($poi->status != 'Pending')
+                    <li class="mt-4"><span class="fa-solid fa-circle-exclamation me-3"
+                            style="font-size: 20px; color:black"></span>
+                        <span
+                            style="color:black; font-size:14px">{{ $poi->terlambat ? 'Terlambat' : 'Tidak Terlambat' }}</span>
+                        <span style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right">
+                            Terlambat</span>
+                    </li>
+                    <hr style="color: rgb(204, 204, 204)">
+                @endif
+                <li class="mt-4"><span class="fa-solid fa-flag me-3" style="font-size: 20px; color:black"></span>
                     <span style="color:black; font-size:14px">{{ $poi->status }}</span> <span
                         style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right"> Status</span>
                 </li>
                 <hr style="color: rgb(204, 204, 204)">
-
-                <li class="mt-4"><span class="fa fa-user-secret me-3" style="font-size: 20px; color:black"></span>
+                <li class="mt-4"><span class="fa-solid fa-calendar-days me-3"
+                        style="font-size: 20px; color:black"></span>
                     <span style="color:black; font-size:14px">{{ $tgl->format('d M Y') }}</span> <span
                         style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right"> Tanggal
                         Dibuat</span>
                 </li>
                 <hr style="color: rgb(204, 204, 204)">
-                <li class="mt-4"><span class="fa fa-user-secret me-3" style="font-size: 20px; color:black"></span>
+                <li class="mt-4"><span class="fa-solid fa-calendar-check me-3"
+                        style="font-size: 20px; color:black"></span>
                     <span style="color:black; font-size:14px">{{ $tgl_mulai->format('d M Y') }}</span> <span
                         style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right"> Tanggal
                         Mulai</span>
                 </li>
                 <hr style="color: rgb(204, 204, 204)">
-
-                {{-- <li class="mt-4"><span class="fa fa-user-secret me-3" style="font-size: 20px; color:black"></span> <span
-                        style="color:black; font-size:14px">{{ $poi->Pelanggan->no_telepon_pic }}</span> <span
-                        style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right"> Telepon</span></li>
-                <hr style="color: rgb(204, 204, 204)"> --}}
-
                 {{-- {{ $tgl_lahir->format('d M Y') }} --}}
             </ul>
 
@@ -220,7 +274,7 @@
                 @if ($poi->foto)
                     <img src="{{ url('/storage/' . $poi->foto) }}" alt="{{ $poi->target }}" class="shadow-sm rounded">
                 @endif
-                @if ($poi->lat_poi && $poi->long_poi)
+                @if (is_numeric($poi->lat_poi) && is_numeric($poi->long_poi))
                     <div id="map" style="margin-top: 40px;border-radius:6px;width:100%;height:250px;"></div>
                     <h4 class="mt-3">{{ $poi->lat_poi }}, {{ $poi->long_poi }}</h4>
                     <script>
@@ -245,17 +299,77 @@
 
             <h2 class="mt-7">Detail Pelanggan</h2>
             <ul class="mt-2">
-                <li class="list-user-info"><span class="icon-user"></span>{{ $poi->Pelanggan->nama }}</li>
-                <li class="list-user-info"><span class="fa fa-building"></span>{{ $poi->Pelanggan->tipe }}</li>
-                <li class="list-user-info"><span class="fa fa-map-marker"></span>{{ $poi->Pelanggan->alamat }}</li>
-                <li class="list-user-info"><span class="icon-phone"></span>{{ $poi->Pelanggan->no_telepon }}</li>
+                <li class="mt-4"><span class="fa-solid fa-user-tie me-3" style="font-size: 20px; color:black"></span>
+                    <span style="color:black; font-size:14px">{{ $poi->Pelanggan->nama }}</span> <span
+                        style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right"> Nama</span>
+                </li>
+                <hr style="color: rgb(204, 204, 204)">
+                <li class="mt-4"><span class="fa fa-building me-3" style="font-size: 20px; color:black"></span>
+                    <span style="color:black; font-size:14px">{{ $poi->Pelanggan->tipe }}</span> <span
+                        style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right"> Tipe</span>
+                </li>
+                <hr style="color: rgb(204, 204, 204)">
+                <li class="mt-4"><span class="fa fa-map-marker me-3" style="font-size: 20px; color:black"></span>
+                    <span style="color:black; font-size:14px">{{ $poi->Pelanggan->alamat }}</span> <span
+                        style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right"> Alamat</span>
+                </li>
+                <hr style="color: rgb(204, 204, 204)">
+                <li class="mt-4"><span class="icon-phone me-3" style="font-size: 20px; color:black"></span>
+                    <span style="color:black; font-size:14px">{{ $poi->Pelanggan->no_telepon }}</span> <span
+                        style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right"> Telepon</span>
+                </li>
+                <hr style="color: rgb(204, 204, 204)">
                 <li class="mt-4"><span class="fa fa-user-secret me-3" style="font-size: 20px; color:black"></span>
                     <span style="color:black; font-size:14px">{{ $poi->Pelanggan->no_telepon_pic }}</span> <span
-                        style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right"> Test</span>
+                        style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right"> Telepon
+                        PIC</span>
                 </li>
                 <hr style="color: rgb(204, 204, 204)">
                 {{-- {{ $tgl_lahir->format('d M Y') }} --}}
             </ul>
+
+            @if ($poi->Pegawai)
+                @php
+                    $pegawai = $poi->Pegawai;
+                @endphp
+                <h2 class="mt-7">Detail Pegawai</h2>
+                <ul class="mt-2">
+                    <li class="mt-4"><span class="fa-solid fa-user-gear me-3"
+                            style="font-size: 20px; color:black"></span>
+                        <span style="color:black; font-size:14px">{{ $pegawai->name }}</span> <span
+                            style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right"> Nama</span>
+                    </li>
+                    <hr style="color: rgb(204, 204, 204)">
+                    <li class="mt-4"><span class="fa-solid fa-address-card me-3"
+                            style="font-size: 20px; color:black"></span>
+                        <span style="color:black; font-size:14px">{{ $pegawai->username }}</span> <span
+                            style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right">
+                            Username</span>
+                    </li>
+                    <hr style="color: rgb(204, 204, 204)">
+                    <li class="mt-4"><span class="fa-solid fa-envelope me-3"
+                            style="font-size: 20px; color:black"></span>
+                        <span style="color:black; font-size:14px">{{ $pegawai->email }}</span> <span
+                            style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right"> Email</span>
+                    </li>
+                    <hr style="color: rgb(204, 204, 204)">
+                    <li class="mt-4"><span class="icon-phone me-3" style="font-size: 20px; color:black"></span>
+                        <span style="color:black; font-size:14px">{{ $pegawai->telepon }}</span> <span
+                            style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right">
+                            Telepon</span>
+                    </li>
+                    <hr style="color: rgb(204, 204, 204)">
+                    <li class="mt-4"><span class="fa-solid fa-venus-mars me-3"
+                            style="font-size: 20px; color:black"></span>
+                        <span style="color:black; font-size:14px">{{ $pegawai->gender }}</span> <span
+                            style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right"> Jenis
+                            Kelamin</span>
+                    </li>
+                    <hr style="color: rgb(204, 204, 204)">
+                    {{-- {{ $tgl_lahir->format('d M Y') }} --}}
+                </ul>
+            @endif
+
         </div>
 
     </div>

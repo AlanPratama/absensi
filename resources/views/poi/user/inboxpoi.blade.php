@@ -27,38 +27,48 @@
             </div>
         </div>
     </div>
-        <div id="app-wrap">
-            <div class="bill-content">
-                <div class="tf-container">
-                    <h3 class="fw_6 d-flex justify-content-between mt-3">{{ $title }}</h3>
-                    <ul class="mt-3 mb-5">
+    <div id="app-wrap">
+        <div class="bill-content">
+            <div class="tf-container">
+                <h3 class="fw_6 d-flex justify-content-between mt-3">{{ $title }}</h3>
+                <ul class="mt-3 mb-5">
 
-                        @foreach ($data_poi as $poi)
-                            <li class="list-card-invoice tf-topbar d-flex justify-content-between align-items-center">
-                                <div class="poi-info">
-                                    @if ($poi->foto == null)
-                                        <img src="{{ url('/assets/img/no-data.png') }}" alt="image">
-                                    @else
-                                        <img src="{{ url('/storage/' . $poi->foto) }}" alt="image">
-                                    @endif
-                                </div>
-                                <div class="content-right">
-                                    <h4><a
-                                            href="{{ url('/inbox-poi/detail/' . $poi->id) }}">{{ $poi->target }}
-                                            <span class="primary_color">View</span></a></h4>
+                    @foreach ($data_poi as $poi)
+                        <li class="list-card-invoice tf-topbar d-flex justify-content-between align-items-center">
+                            <div class="poi-info">
+                                @if ($poi->foto == null)
+                                    <img src="{{ url('/assets/img/no-data.png') }}" alt="image">
+                                @else
+                                    <img src="{{ url('/storage/' . $poi->foto) }}" alt="image">
+                                @endif
+                            </div>
+                            <div class="content-right">
+                                <h4><a href="{{ url('/inbox-poi/detail/' . $poi->id) }}">{{ $poi->target }}
+                                        <span class="primary_color">View</span></a></h4>
+                                <p>{{ $poi->tipe ?? '-' }}</p>
+                                <div class="d-flex align-items-center justify-content-between">
                                     <p>
-                                        {{ $poi->tipe ?? '-' }} <br>
                                         {{ $poi->tanggal_mulai ?? '- tidak ada tanggal mulai' }}
                                     </p>
+                                    @if ($poi->status == 'Pending')
+                                        <span class="badge bg-info">{{ $poi->status }}</span>
+                                    @elseif($poi->status == 'In Progress')
+                                        <span class="badge bg-warning">{{ $poi->status }}</span>
+                                    @elseif($poi->status == 'Done')
+                                        <span class="badge bg-success">{{ $poi->status }}</span>
+                                    @else
+                                        <span class="badge bg-danger">{{ $poi->status }}</span>
+                                    @endif
                                 </div>
-                            </li>
-                        @endforeach
-                        <div class="d-flex justify-content-end me-4 mt-4">
-                            {{ $data_poi->links() }}
-                        </div>
-                    </ul>
+                            </div>
+                        </li>
+                    @endforeach
+                    <div class="d-flex justify-content-end me-4 mt-4">
+                        {{ $data_poi->links() }}
+                    </div>
+                </ul>
 
-                </div>
             </div>
         </div>
+    </div>
 @endsection

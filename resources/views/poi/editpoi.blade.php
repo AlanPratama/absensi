@@ -197,7 +197,7 @@
                 });
 
                 $('#tipe').change(function() {
-                    if ($(this).val() == 'Deskriptif') {
+                    if ($(this).val() != 'Kuantitas') {
                         $('#jumlah_nominal_div').addClass('d-none');
                     } else {
                         $('#jumlah_nominal_div').removeClass('d-none');

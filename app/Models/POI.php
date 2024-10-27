@@ -25,7 +25,7 @@ class POI extends Model
     }
 
     public function DetailPOI() {
-        return $this->hasMany(DetailPOI::class, 'poi_id', 'id');
+        return $this->hasOne(DetailPOI::class, 'poi_id', 'id');
     }
 
     public function PermintaanPOI() {

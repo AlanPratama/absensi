@@ -46,9 +46,10 @@
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="detail-poi-modalLabel">{{ \Carbon\Carbon::parse($detail_poi->created_at)->locale('id_ID')->format('d M Y - H:i') }} WIB</h5>
-                                                    <button class="btn-close" type="button" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
+                                                    <h5 class="modal-title" id="detail-poi-modalLabel">
+                                                        {{ \Carbon\Carbon::parse($detail_poi->created_at)->locale('id_ID')->format('d M Y - H:i') }}
+                                                        WIB</h5> <button class="btn-close" type="button"
+                                                        data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div>
                                                     <div class="modal-body">
@@ -123,6 +124,17 @@
                                         Kategori</span>
                                 </li>
                                 <hr style="color: rgb(204, 204, 204)">
+                                @if ($poi->status != 'Pending')
+                                    <li class="mt-4"><span class="fa-solid fa-circle-exclamation me-3"
+                                            style="font-size: 20px; color:black"></span>
+                                        <span
+                                            style="color:black; font-size:14px">{{ $poi->terlambat ? 'Terlambat' : 'Tidak Terlambat' }}</span>
+                                        <span
+                                            style="font-style: italic; font-size:12px; color:rgb(139, 139, 139); float:right">
+                                            Terlambat</span>
+                                    </li>
+                                    <hr style="color: rgb(204, 204, 204)">
+                                @endif
 
                                 <li class="mt-4"><span class="fa-solid fa-flag me-3"
                                         style="font-size: 20px; color:black"></span>
@@ -278,97 +290,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped" id="mytable">
-                            <thead>
-                                <tr>
-                                    <th>No.</th>
-                                    <th>Pegawai</th>
-                                    <th>Tanggal</th>
-                                    {{-- <th>Target</th> --}}
-                                    {{-- <th>Foto</th> --}}
-                                    {{-- <th>Kategori</th> --}}
-                                    {{-- <th>Tipe</th> --}}
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($poi->PermintaanPOI as $pPoi)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $pPoi->Pegawai ? $pPoi->Pegawai->name : '-' }}</td>
-                                        <td>{{ $pPoi->tanggal }}</td>
-                                        <td>
-                                            @if ($pPoi->status == 'Pending')
-                                                <span class="badge badge-info">{{ $pPoi->status }}</span>
-                                            @elseif($pPoi->status == 'In Progress')
-                                                <span class="badge badge-warning">{{ $pPoi->status }}</span>
-                                            @elseif($pPoi->status == 'Done')
-                                                <span class="badge badge-success">{{ $pPoi->status }}</span>
-                                            @else
-                                                <span class="badge badge-danger">{{ $pPoi->status }}</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <ul class="action">
-                                                @if ($pPoi->status == 'Pending')
-                                                    <li>
-                                                        <form action="{{ url('/data-poi/permintaan/' . $pPoi->id) }}"
-                                                            method="post" class="d-inline">
-                                                            @method('patch')
-                                                            @csrf
-                                                            <input type="hidden" name="status" value="Diterima">
-                                                            <input type="hidden" name="pegawai_id"
-                                                                value="{{ $pPoi->pegawai_id }}">
-                                                            <button class="border-0" style="background-color: transparent"
-                                                                onClick="return confirm('Are You Sure')">
-                                                                <span class="badge badge-success">Terima</span>
-                                                            </button>
-                                                        </form>
-                                                    </li>
 
-                                                    <li>
-                                                        <form action="{{ url('/data-poi/permintaan/' . $pPoi->id) }}"
-                                                            method="post" class="d-inline">
-                                                            @method('patch')
-                                                            @csrf
-                                                            <input type="hidden" name="status" value="Ditolak">
-                                                            <button class="border-0" style="background-color: transparent"
-                                                                onClick="return confirm('Are You Sure')">
-                                                                <span class="badge badge-danger">Tolak</span>
-                                                            </button>
-                                                        </form>
-                                                    </li>
-                                                @else
-                                                    <li>
-                                                        <span
-                                                            class="badge @if ($pPoi->status == 'Diterima') badge-success @else badge-danger @endif">Sudah
-                                                            {{ $pPoi->status }}</span>
-                                                    </li>
-                                                    <li>
-                                                        <form action="{{ url('/data-poi/permintaan/' . $pPoi->id) }}"
-                                                            method="post" class="d-inline">
-                                                            @method('patch')
-                                                            @csrf
-                                                            <input type="hidden" name="status" value="Pending">
-                                                            <button class="border-0" style="background-color: transparent"
-                                                                onClick="return confirm('Are You Sure')">
-                                                                <span class="badge badge-info">Pending</span>
-                                                            </button>
-                                                        </form>
-                                                    </li>
-                                                @endif
-                                            </ul>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                    {{-- <div class="d-flex justify-content-end mr-4">
-                        {{ $data_poi->links() }}
-                    </div> --}}
                 </div>
             </div>
         </div>

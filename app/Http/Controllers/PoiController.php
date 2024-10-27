@@ -103,6 +103,12 @@ class PoiController extends Controller
         if (!$poi) {
             return redirect('/data-poi');
         }
+
+        return view('poi.detailpoi', [
+            'title' => 'Detail POI',
+            'poi' => $poi,
+            'data_user' => auth()->user(),
+        ]);
     }
 
     public function edit($id)
@@ -193,6 +199,12 @@ class PoiController extends Controller
 
         if ($poi->foto) {
             Storage::delete($poi->foto);
+        }
+
+        if($poi->DetailPOI) {
+            if($poi->DetailPOI->foto) Storage::delete($poi->DetailPOI->foto);
+            if($poi->DetailPOI->tanda_tangan) Storage::delete($poi->DetailPOI->tanda_tangan);
+            $poi->DetailPOI->delete();
         }
 
         $poi->delete();
