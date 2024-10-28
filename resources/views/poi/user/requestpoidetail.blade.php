@@ -132,7 +132,7 @@
                                                     <div>
                                                         <div class="rounded shadow-sm border @error('signed') is-invalid @enderror"
                                                             id="sig"></div>
-                                                        <button id="clear" class="mt-2 btn btn-warning btn-sm">Clear
+                                                        <button id="clear" type="button" class="mt-2 btn btn-warning btn-sm">Clear
                                                             Signature</button>
                                                         <textarea id="signature64" name="signed" style="display: none"></textarea>
                                                     </div>
