@@ -164,7 +164,7 @@
                                 @endif
                                 @if (is_numeric($poi->lat_poi) && is_numeric($poi->long_poi))
                                     <div id="map"
-                                        style="margin-top: 40px;border-radius:6px;width:100%;height:250px;"></div>
+                                        style="margin-top: 40px;border-radius:6px;width:100%;height:250px;z-index: 1;"></div>
                                     <h4 class="mt-3">{{ $poi->lat_poi }}, {{ $poi->long_poi }}</h4>
                                     <script>
                                         var map = L.map('map').setView([{{ $poi->lat_poi }}, {{ $poi->long_poi }}], 18);
