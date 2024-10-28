@@ -33,6 +33,7 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <h3 class="fw_6 d-flex justify-content-between mt-3">{{ $title }}</h3>
                 </div>
+                @if ($data_poi->count() > 0)
                 <ul class="mt-3 mb-5">
 
                     @foreach ($data_poi as $poi)
@@ -70,6 +71,17 @@
                         {{ $data_poi->links() }}
                     </div>
                 </ul>
+                @else
+                <div class="text-center d-flex flex-column justify-content-center align-items-center">
+                    <img src="{{ asset('assets/img/no-data2.png') }}" alt="No Data" style="width: 200px;">
+                    <h5 class="mb-3">Tidak Ada Data POI<br>Silahkan Hubungi Admin Untuk Menambah POI</h5>
+                    <div class="d-flex align-items-center gap-2">
+
+                        <a href="{{ url('/request-poi') }}" class="btn btn-primary btn-sm">Request POI</a>
+                        {{-- <a href="{{ url('/request-poi') }}" class="btn btn-success btn-sm">Request POI Saya</a> --}}
+                    </div>
+                </div>
+                @endif
 
             </div>
         </div>
