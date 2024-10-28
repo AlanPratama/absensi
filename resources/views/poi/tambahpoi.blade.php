@@ -16,6 +16,28 @@
             crossorigin=""></script> --}}
 
         <script>
+            jQuery.fn.ForceNumericOnly =
+                function() {
+                    return this.each(function() {
+                        $(this).keydown(function(e) {
+                            var key = e.charCode || e.keyCode || 0;
+                            // allow backspace, tab, delete, enter, arrows, numbers and keypad numbers, hyphen ONLY
+                            // home, end, period, and numpad decimal
+                            return (
+                                key == 189 ||
+                                key == 8 ||
+                                key == 9 ||
+                                key == 13 ||
+                                key == 46 ||
+                                key == 110 ||
+                                key == 190 ||
+                                (key >= 35 && key <= 40) ||
+                                (key >= 48 && key <= 57) ||
+                                (key >= 96 && key <= 105));
+                        });
+                    });
+                };
+
             var mapCenter = [
                 {{ -6.2208658525024605 }},
                 {{ 106.87877079945511 }},
@@ -45,6 +67,9 @@
             }
             $('#lat_poi').on('input', updateMarkerByInputs);
             $('#long_poi').on('input', updateMarkerByInputs);
+
+            $("#lat_poi").ForceNumericOnly();
+            $("#long_poi").ForceNumericOnly();
 
             $('#buka_map').on('click', function() {
                 $('#mapid').toggleClass('d-none');
@@ -190,7 +215,8 @@
                                 </div>
                             @enderror
                         </div>
-                        <div class="container rounded shadow-sm w-100 mb-4" style="height: 500px; z-index: 0" id="mapid"></div>
+                        <div class="container rounded shadow-sm w-100 mb-4" style="height: 500px; z-index: 0"
+                            id="mapid"></div>
                         <div class="col mb-4">
                             <button type="button" id="buka_map" class="btn form-control btn-primary">Tutup Map</button>
                         </div>
