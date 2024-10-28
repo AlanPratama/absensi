@@ -73,7 +73,7 @@
                                 @csrf
                                 @method('patch')
                                 <input type="hidden" name="status" value="In Progress">
-                                <button onClick="return confirm('Are You Sure')" type="submit"
+                                <button @if($poi->status == 'Expired') disabled @endif onClick="return confirm('Are You Sure')" type="submit"
                                     class="btn btn-primary btn-sm"><i class="fa-solid fa-gear mr-2"></i> Mulai
                                     Dikerjakan</button>
                             </form>

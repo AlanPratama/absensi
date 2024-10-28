@@ -67,6 +67,20 @@
             })
         </script>
     @endpush
+    @if (Session::has('error'))
+        @push('script')
+            <script>
+                Swal.fire({
+                    title: 'Terjadi Error!',
+                    text: '{{ Session::get('error') }}',
+                    icon: 'error',
+                })
+                setTimeout(() => {
+                    Swal.close()
+                }, 10000)
+            </script>
+        @endpush
+    @endif
     <div class="row">
         <div class="col-md-12 m project-list">
             <div class="card">
@@ -239,6 +253,28 @@
                             <label for="status">Status POI</label>
                             <select id="status" name="status" class="form-control selectpicker" id="status">
                                 <option value="">Pilih Status POI</option>
+                                @if ($poi->status == 'In Progress')
+                                    <option @if ($poi->status == 'In Progress') selected @endif value="In Progress">In
+                                        Progress</option>
+                                @endif
+                                @if ($poi->status == 'Expired')
+                                    <option @if ($poi->status == 'Expired') selected @endif value="Expired">Expired
+                                    </option>
+                                @endif
+                                @if ($poi->status == 'Done')
+                                    <option @if ($poi->status == 'Done') selected @endif value="Done">Done
+                                    </option>
+                                @endif
+                                @if ($poi->status == 'Pending' || $poi->status == 'Expired' || $poi->status == 'In Progress' || $poi->status == 'Cancel')
+                                    <option @if ($poi->status == 'Pending') selected @endif value="Pending">Pending
+                                    </option>
+                                @endif
+                                @if ($poi->status == 'Pending' || $poi->status == 'Expired' || $poi->status == 'Cancel')
+                                    <option @if ($poi->status == 'Cancel') selected @endif value="Cancel">Cancel
+                                    </option>
+                                @endif
+
+                                {{-- <option value="">Pilih Status POI</option>
                                 <option @if ($poi->status == 'Pending') selected @endif value="Pending">Pending</option>
                                 @if ($poi->pegawai_id)
                                     <option @if ($poi->status == 'In Progress') selected @endif value="In Progress">In
@@ -246,7 +282,7 @@
                                     <option @if ($poi->status == 'Done') selected @endif value="Done">Done</option>
                                     <option @if ($poi->status == 'Cancel') selected @endif value="Cancel">Cancel
                                     </option>
-                                @endif
+                                @endif --}}
                             </select>
                             @error('status')
                                 <div class="invalid-feedback">

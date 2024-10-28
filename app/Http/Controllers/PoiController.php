@@ -137,7 +137,7 @@ class PoiController extends Controller
             [
                 // "pegawai_id" => "required",
                 'pelanggan_id' => 'required',
-                'kategori_poi_id' => 'required',
+                // 'kategori_poi_id' => 'required',
                 'target' => 'required',
                 'tipe' => 'required',
                 'status' => 'required',
@@ -145,7 +145,7 @@ class PoiController extends Controller
             [
                 // "pegawai_id.required" => "Pegawai harus diisi",
                 'pelanggan_id.required' => 'Pelanggan harus diisi',
-                'kategori_poi_id.required' => 'Kategori POI harus diisi',
+                // 'kategori_poi_id.required' => 'Kategori POI harus diisi',
                 'target.required' => 'Target POI harus diisi',
                 'tipe.required' => 'Tipe POI harus diisi',
                 'status.required' => 'Status POI harus diisi',
@@ -156,6 +156,26 @@ class PoiController extends Controller
 
         if (!$poi) {
             return redirect('/data-poi');
+        }
+
+        if($request->status == 'Pending') {
+            // dd($poi->status);
+            if($poi->status != 'Pending' && $poi->status != 'In Progress' && $poi->status != 'Cancel' && $poi->status != 'Expired') return redirect()->back()->with('error', 'Status POI Telah Berubah!');
+        }
+
+        elseif($request->status == 'In Progress') {
+            // dd("2");
+            if($poi->status != 'In Progress') return redirect()->back()->with('error', 'Status POI Telah Berubah!');
+        }
+
+        elseif($request->status == 'Done') {
+            // dd("3");
+            if($poi->status != 'Done') return redirect()->back()->with('error', 'Status POI Telah Berubah!');
+        }
+
+        elseif($request->status == 'Cancel') {
+            // dd("4");
+            if($poi->status != 'Cancel' && $poi->status != 'Pending' && $poi->status != 'Expired') return redirect()->back()->with('error', 'Status POI Telah Berubah!');
         }
 
         if ($request->tipe == 'Kuantitas' && $request->jumlah_nominal <= 0) {
@@ -323,6 +343,7 @@ class PoiController extends Controller
 
         $poi = POI::where('id', $id)
             ->where('pegawai_id', auth()->user()->id)
+            ->where('status', 'In Progress')
             ->first();
 
         if (!$poi) {
