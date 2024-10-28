@@ -80,10 +80,10 @@
                         @elseif ($poi->status == 'In Progress')
                             @push('style')
                                 {{-- sign --}}
-                                <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-                                <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-                                <script type="text/javascript" src="http://keith-wood.name/js/jquery.signature.js"></script>
-                                <link rel="stylesheet" type="text/css" href="http://keith-wood.name/css/jquery.signature.css">
+                                <script type="text/javascript" src="{{ asset('assets/jquery1.12.4.js') }}"></script>
+                                <script type="text/javascript" src="{{ asset('assets/jquery-ui1.12.1.js') }}"></script>
+                                <script type="text/javascript" src="{{ asset('assets/jquery-signature.js') }}"></script>
+                                <link rel="stylesheet" type="text/css" href="{{ asset('assets/jquery-signature.css') }}">
                                 {{-- end sign --}}
                             @endpush
                             <div>
