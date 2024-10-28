@@ -102,7 +102,7 @@
                     @method('put')
                     <div class="form-row">
                         <div class="col mb-4">
-                            <label for="pegawai_id">Nama Pegawai</label>
+                            <label for="pegawai_id">Nama Pegawai (opsional)</label>
                             <select id="pegawai_id" name="pegawai_id" class="form-control selectpicker" id="">
                                 <option value="">Pilih Pegawai</option>
                                 @foreach ($data_pegawai as $pegawai)
