@@ -138,7 +138,8 @@
                     center: "title",
                     right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
                 },
-                initialView: "dayGridMonth",
+                // initialView: "dayGridMonth",
+                initialView: "listWeek",
                 navLinks: true, // can click day/week names to navigate views
                 editable: true,
                 selectable: true,
@@ -178,7 +179,7 @@
                   @endforeach
                 ],
                 editable: true,
-                droppable: true, 
+                droppable: true,
                 drop: function (arg) {
                     if (document.getElementById("drop-remove").checked) {
                         arg.draggedEl.parentNode.removeChild(arg.draggedEl);

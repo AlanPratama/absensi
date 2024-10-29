@@ -6,7 +6,7 @@
                 <div class="tf-spacing-16"></div>
 
                 <div class="bill-content">
-                    <form action="{{ url('/inbox-poi') }}">
+                    <form action="{{ url('/penugasan-kerja') }}">
                         <div class="row">
                             <div class="col-10">
                                 <div class="input-field">
@@ -44,7 +44,7 @@
                                     @endif
                                 </div>
                                 <div class="content-right">
-                                    <h4><a href="{{ url('/inbox-poi/detail/' . $poi->id) }}">{{ $poi->target }}
+                                    <h4><a href="{{ url('/penugasan-kerja/detail/' . $poi->id) }}">{{ $poi->target }}
                                             <span class="primary_color">View</span></a></h4>
                                     <p>{{ $poi->tipe ?? '-' }}</p>
                                     <div class="d-flex align-items-center justify-content-between">
@@ -73,11 +73,11 @@
                     @else
                         <div class="text-center d-flex flex-column justify-content-center align-items-center">
                             <img src="{{ asset('assets/img/no-data2.png') }}" alt="No Data" style="width: 200px;">
-                            <h5 class="mb-3">Tidak Ada Data POI<br>Silahkan Hubungi Admin Untuk Menambah POI</h5>
+                            <h5 class="mb-3">Tidak Ada Data Penugasan Kerja<br>Silahkan Hubungi Admin Untuk Menambah POI</h5>
                             <div class="d-flex align-items-center gap-2">
 
-                                <a href="{{ url('/request-poi') }}" class="btn btn-primary btn-sm">Request POI</a>
-                                {{-- <a href="{{ url('/request-poi') }}" class="btn btn-success btn-sm">Request POI Saya</a> --}}
+                                <a href="{{ url('/request-penugasan') }}" class="btn btn-primary btn-sm">Request Penugasan</a>
+                                {{-- <a href="{{ url('/request-penugasan') }}" class="btn btn-success btn-sm">Request Penugasan Saya</a> --}}
                             </div>
                         </div>
                     @endif

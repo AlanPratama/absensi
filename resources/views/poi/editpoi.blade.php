@@ -41,7 +41,7 @@
             function updateMarker(lat, lng) {
                 marker
                     .setLatLng([lat, lng])
-                    .bindPopup("Lokasi POI: " + marker.getLatLng().toString())
+                    .bindPopup("Lokasi Penugasan Kerja: " + marker.getLatLng().toString())
                     .openPopup();
                 return false;
             };

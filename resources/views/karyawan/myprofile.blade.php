@@ -166,7 +166,7 @@
                                             "status" => "Lajang"
                                         ]);
                                         ?>
-                                        <label for="status_nikah">Kelas</label>
+                                        <label for="status_nikah">Status Pernikahan</label>
                                         <select name="status_nikah" id="status_nikah" class="form-control @error('status_nikah') is-invalid @enderror selectpicker" data-live-search="true">
                                             @foreach ($sNikah as $s)
                                             @if(old('status_nikah', auth()->user()->status_nikah) == $s["status"])

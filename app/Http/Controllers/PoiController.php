@@ -33,7 +33,7 @@ class PoiController extends Controller
             ->withQueryString();
 
         return view('poi.datapoi', [
-            'title' => 'Data POI Pegawai',
+            'title' => 'Data Penugasan Kerja Pegawai',
             'data_poi' => $poi,
         ]);
     }
@@ -106,7 +106,7 @@ class PoiController extends Controller
         }
 
         return view('poi.detailpoi', [
-            'title' => 'Detail POI',
+            'title' => 'Detail Penugasan',
             'poi' => $poi,
             'data_user' => auth()->user(),
         ]);
@@ -251,7 +251,7 @@ class PoiController extends Controller
             ->withQueryString();
 
         return view('poi.user.inboxpoi', [
-            'title' => 'Inbox POI',
+            'title' => 'Penugasan Kerja',
             'data_poi' => $data,
         ]);
     }
@@ -264,11 +264,11 @@ class PoiController extends Controller
             ->first();
 
         if (!$data) {
-            return redirect('/inbox-poi');
+            return redirect('/penugasan-kerja');
         }
 
         return view('poi.user.requestpoidetail', [
-            'title' => 'Detail POI',
+            'title' => 'Penugasan Kerja',
             'poi' => $data,
             'data_user' => $user,
         ]);
@@ -293,7 +293,7 @@ class PoiController extends Controller
             ->first();
 
         if (!$data) {
-            return redirect('/inbox-poi');
+            return redirect('/penugasan-kerja');
         }
 
         if ($data->status == 'Expired') {

@@ -19,7 +19,7 @@ class PermintaanPOIController extends Controller
         }
 
         return view('poi.permintaanpoi', [
-            'title' => 'Permintaan POI',
+            'title' => 'Permintaan Penugasan',
             'poi' => $poi,
             'data_user' => auth()->user(),
         ]);
@@ -66,7 +66,7 @@ class PermintaanPOIController extends Controller
             ->withQueryString();
 
         return view('poi.user.requestpoi', [
-            'title' => 'Request POI',
+            'title' => 'Request Penugasan',
             'data_poi' => $data,
         ]);
     }
@@ -86,7 +86,7 @@ class PermintaanPOIController extends Controller
             ->withQueryString();
 
         return view('poi.user.requestpoimy', [
-            'title' => 'Request POI Saya',
+            'title' => 'Request Penugasan Saya',
             'data_poi' => $data,
         ]);
     }
@@ -108,7 +108,7 @@ class PermintaanPOIController extends Controller
         $sudahRequest = $data->PermintaanPOI->where('pegawai_id', auth()->user()->id)->first();
 
         return view('poi.user.requestpoidetail', [
-            'title' => 'Detail POI',
+            'title' => 'Detail Penugasan',
             'poi' => $data,
             'data_user' => User::find(auth()->user()->id),
             'sudahRequest' => $sudahRequest
@@ -137,6 +137,6 @@ class PermintaanPOIController extends Controller
         $permintaanPoi->tanggal = Carbon::now()->toDateString();
         $permintaanPoi->save();
 
-        return redirect('/request-poi')->with('success', 'Permintaan POI berhasil dikirim');
+        return redirect('/request-penugasan')->with('success', 'Permintaan POI berhasil dikirim');
     }
 }

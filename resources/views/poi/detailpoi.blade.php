@@ -30,7 +30,7 @@
                     <div class="repicient-content">
                         <div class="tf-container">
                             <div class="d-flex align-items-center justify-content-between">
-                                <h2 class="mt-7">Point Of Interest (POI)</h2>
+                                <h2 class="mt-7">Penugasan Kerja</h2>
                                 @if ($poi->status == 'Done' && $poi->DetailPOI)
                                     @php
                                         $detail_poi = $poi->DetailPOI;
@@ -178,7 +178,7 @@
                                             radius: {{ $radius }}
                                         }).addTo(map);
 
-                                        marker.bindPopup("<b>Lokasi POI</b>").openPopup();
+                                        marker.bindPopup("<b>Lokasi Penugasan Kerja</b>").openPopup();
                                         circle.bindPopup("<b>Radius {{ $data_user->Lokasi->nama_lokasi ?? '' }}</b>");
                                     </script>
                                 @endif

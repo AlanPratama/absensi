@@ -23,7 +23,7 @@
                 <div class="bill-content">
                     <div>
                         <div class="mb-1 d-flex justify-content-between">
-                            <h5>Point Of Interest</h5>
+                            <h5>Penugasan Kerja</h5>
                             <div class="d-flex align-items-center gap-2">
                                 {{-- @if ($poi->status != 'Pending' && $poi->terlambat)
                                     <h5 class="badge bg-danger">Terlambat</h5>
@@ -58,18 +58,18 @@
 
                 @if ($poi->pegawai_id == null)
                     @if (!$sudahRequest)
-                        <form action="{{ url('/request-poi/process/' . $poi->id) }}" method="post">
+                        <form action="{{ url('/request-penugasan/process/' . $poi->id) }}" method="post">
                             @csrf
                             @method('patch')
                             <button onClick="return confirm('Are You Sure')" type="submit"
-                                class="btn btn-primary btn-sm"><i class="fa-solid fa-hand mr-2"></i> Request POI
+                                class="btn btn-primary btn-sm"><i class="fa-solid fa-hand mr-2"></i> Request Penugasan
                                 Ini</button>
                         </form>
                     @endif
                 @else
                     @if ($poi->status != 'Done' || $poi->status != 'Cancel')
                         @if ($poi->status == 'Pending' || $poi->status == 'Expired')
-                            <form action="{{ url('/inbox-poi/change-status/' . $poi->id) }}" method="post">
+                            <form action="{{ url('/penugasan-kerja/change-status/' . $poi->id) }}" method="post">
                                 @csrf
                                 @method('patch')
                                 <input type="hidden" name="status" value="In Progress">
@@ -99,11 +99,11 @@
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="poi-done-modalLabel">POI Selesai</h5>
+                                            <h5 class="modal-title" id="poi-done-modalLabel">Penugasan Kerja Selesai</h5>
                                             <button class="btn-close" type="button" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
                                         </div>
-                                        <form action="{{ url('/inbox-poi/poi-detail/' . $poi->id) }}" method="POST"
+                                        <form action="{{ url('/penugasan-kerja/penugasan-detail/' . $poi->id) }}" method="POST"
                                             enctype="multipart/form-data">
                                             <div class="modal-body">
                                                 @csrf
@@ -168,14 +168,14 @@
                 @endif
             </div>
             <div class="d-flex align-items-center justify-content-between">
-                <h2 class="mt-7">Point Of Interest (POI)</h2>
+                <h2 class="mt-7">Penugasan Kerja</h2>
                 @if ($poi->status == 'Done' && $poi->DetailPOI)
                     @php
                         $detail_poi = $poi->DetailPOI;
                     @endphp
                     <div>
                         <button type="button" data-bs-toggle="modal" data-original-title="POI Done"
-                            data-bs-target="#detail-poi-modal" class="btn btn-primary btn-sm mt-7">Detail POI</button>
+                            data-bs-target="#detail-poi-modal" class="btn btn-primary btn-sm mt-7">Detail Penugasan</button>
                     </div>
 
                     <div class="modal fade" id="detail-poi-modal" tabindex="-1" role="dialog"
@@ -308,7 +308,7 @@
                             radius: {{ $radius }}
                         }).addTo(map);
 
-                        marker.bindPopup("<b>Lokasi POI</b>").openPopup();
+                        marker.bindPopup("<b>Lokasi Penugasan Kerja</b>").openPopup();
                         circle.bindPopup("<b>Radius {{ $data_user->Lokasi->nama_lokasi ?? '' }}</b>");
                     </script>
                 @endif

@@ -6,7 +6,7 @@
                 <div class="tf-spacing-16"></div>
 
                 <div class="bill-content">
-                    <form action="{{ url('/request-poi') }}">
+                    <form action="{{ url('/request-penugasan') }}">
                         <div class="row">
                             <div class="col-10">
                                 <div class="input-field">
@@ -32,8 +32,8 @@
             <div class="tf-container">
                 <div class="d-flex justify-content-between align-items-center">
                     <h3 class="fw_6 d-flex justify-content-between mt-3">{{ $title }}</h3>
-                    <a href="{{ url('/request-poi/my') }}" class="text-decoration-none primary_color">
-                        Lihat Request POI Saya
+                    <a href="{{ url('/request-penugasan/my') }}" class="text-decoration-none primary_color">
+                        Lihat Request Penugasan Saya
                     </a>
                 </div>
                 @if ($data_poi->count() > 0)
@@ -49,7 +49,7 @@
                                     @endif
                                 </div>
                                 <div class="content-right">
-                                    <h4><a href="{{ url('/request-poi/detail/' . $poi->id) }}">{{ $poi->target }}
+                                    <h4><a href="{{ url('/request-penugasan/detail/' . $poi->id) }}">{{ $poi->target }}
                                             <span class="primary_color">View</span></a></h4>
                                     <p>{{ $poi->tipe ?? '-' }}</p>
                                     <div class="d-flex align-items-center justify-content-between">
@@ -78,7 +78,7 @@
                 @else
                     <div class="text-center d-flex flex-column justify-content-center align-items-center">
                         <img src="{{ asset('assets/img/no-data2.png') }}" alt="No Data" style="width: 200px;">
-                        <h5 class="mb-3">Tidak Ada Data POI<br>Silahkan Hubungi Admin Untuk Menambah POI</h5>
+                        <h5 class="mb-3">Tidak Ada Data Penugasan Kerja<br>Silahkan Hubungi Admin Untuk Menambah Penugasan Kerja</h5>
                     </div>
                 @endif
 
